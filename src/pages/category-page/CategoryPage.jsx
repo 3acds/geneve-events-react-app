@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 // Component imports
 import EventCard from '../../components/event-card/EventCard';
+import data from '../home-page/data/static-data.json';
 // CSS imports
 import './CategoryPage.css';
 
@@ -10,8 +11,11 @@ const CategoryPage = () => {
   const { tag } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const displayTag = location.state?.displayTag || tag;
-  const cornerColor = location.state?.cornerColor || 'rgba(255, 0, 0, 0.5)';
+  const category = data.categories.find(({ apiTag }) => apiTag === tag);
+  const displayTag = location.state?.displayTag || category?.displayTag || tag;
+  const cornerColor = location.state?.cornerColor
+    || category?.cornerColor
+    || 'linear-gradient(to right, #FFEC00, #FF0000)';
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleCardClick = (event) => {
