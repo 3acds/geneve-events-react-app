@@ -5,23 +5,33 @@
   box-sizing: border-box;
   min-height: var(--navbar-height);
   padding: 10px 30px;
-  background: linear-gradient(to right, #FAFF00, #ff0000);
-  color: black;
-
-  -moz-box-shadow: 0px 1px 13px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 1px 13px 0px rgba(0,0,0,0.75);
+  color: var(--gee-paper, #f5f0e4);
+  background: rgba(7, 17, 29, 0.98);
+  border-bottom: 1px solid rgba(245, 240, 228, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 
   position: fixed; 
   top: 0; 
   width: 100%; 
   z-index: 1000; 
-  transition: background 0.3s, backdrop-filter 0.3s, opacity 0.3s; 
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.navbar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gee-gold, #efb51b), var(--gee-red, #c72d3a) 62%, transparent 88%);
+  opacity: 0.9;
+  pointer-events: none;
 }
 
 .navbar.scroll {
-  background: linear-gradient(to right, rgba(251, 255, 0, 0.75), rgba(255, 0, 0, 0.75)); 
-  backdrop-filter: blur(10px); 
-  opacity: 0.8; 
+  background: rgba(7, 17, 29, 0.94);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .navbar-brand {
@@ -36,7 +46,7 @@
   margin: 0;
   padding: 0;
   background: none;
-  color: #111;
+  color: var(--gee-paper, #f5f0e4);
   font-weight: bold;
   text-decoration: none;
   transition: transform 0.22s ease;
@@ -54,7 +64,7 @@
   flex-direction: column;
   align-items: flex-start;
   width: 4.5rem;
-  color: #111;
+  color: var(--gee-paper, #f5f0e4);
   font-size: 0.92rem;
   font-weight: 900;
   letter-spacing: -0.025em;
@@ -69,6 +79,7 @@
 
 .navbar-brand-events {
   align-self: flex-end;
+  color: var(--gee-gold, #efb51b);
 }
 
 .navbar-brand-compact {
@@ -178,10 +189,10 @@
   min-height: 2.5rem;
   margin: 0;
   padding: 0.45rem 0.85rem;
-  color: #111;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  border-radius: 999px;
+  color: var(--gee-paper, #f5f0e4);
+  background: rgba(245, 240, 228, 0.055);
+  border: 1px solid rgba(245, 240, 228, 0.16);
+  border-radius: 4px;
   font-size: 0.95rem;
   font-weight: 700;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
@@ -191,9 +202,13 @@
 .navbar .site-navigation-toggle:focus-visible,
 .navbar .site-navigation-toggle[aria-expanded='true'] {
   color: #fff;
-  background: rgba(20, 30, 48, 0.85);
-  border-color: rgba(255, 255, 255, 0.38);
-  outline: none;
+  background: rgba(24, 48, 71, 0.88);
+  border-color: rgba(239, 181, 27, 0.62);
+}
+
+.navbar .site-navigation-toggle:focus-visible {
+  outline: 2px solid var(--gee-gold, #efb51b);
+  outline-offset: 3px;
 }
 
 .navigation-grid-icon {
@@ -221,8 +236,7 @@
   position: fixed;
   inset: var(--navbar-height) 0 0;
   z-index: 999;
-  background: rgba(5, 12, 22, 0.7);
-  backdrop-filter: blur(9px);
+  background: rgba(5, 12, 22, 0.86);
   animation: category-overlay-in 0.18s ease-out;
 }
 
@@ -233,9 +247,11 @@
   width: min(36rem, calc(100vw - 2rem));
   padding: 1rem;
   color: #fff;
-  background: #121f31;
-  border: 1px solid rgba(255, 174, 0, 0.4);
-  border-radius: 12px;
+  background:
+    radial-gradient(circle, rgba(245, 240, 228, 0.04) 0.7px, transparent 0.9px) 0 0 / 18px 18px,
+    var(--gee-navy-900, #0d1c2c);
+  border: 1px solid var(--gee-line, rgba(239, 181, 27, 0.25));
+  border-radius: 4px;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
   transform: translateX(-50%);
   animation: category-menu-in 0.2s ease-out;
@@ -245,9 +261,8 @@
   content: '';
   position: absolute;
   inset: 0 0 auto;
-  height: 3px;
-  background: linear-gradient(90deg, #ffec00, #ff7a00 55%, #ff1744);
-  border-radius: 12px 12px 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gee-gold, #efb51b), var(--gee-red, #c72d3a) 62%, transparent 84%);
 }
 
 @keyframes category-overlay-in {
@@ -268,7 +283,7 @@
 
 .category-navigation-heading {
   margin: 0.25rem 0.35rem 0.85rem;
-  color: #ffb000;
+  color: var(--gee-gold, #efb51b);
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -289,8 +304,8 @@
   padding: 0.55rem 0.7rem;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 7px;
-  color: #eef2f7;
+  border-radius: 3px;
+  color: var(--gee-paper, #f5f0e4);
   font-size: 0.9rem;
   font-weight: 600;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -299,23 +314,27 @@
 .category-navigation-link:hover,
 .category-navigation-link:focus-visible {
   color: #fff;
-  background: linear-gradient(90deg, rgba(255, 236, 0, 0.1), rgba(255, 23, 68, 0.12));
-  border-color: rgba(255, 174, 0, 0.28);
-  outline: none;
+  background: linear-gradient(90deg, rgba(239, 181, 27, 0.09), rgba(199, 45, 58, 0.1));
+  border-color: rgba(239, 181, 27, 0.32);
   transform: translateX(2px);
+}
+
+.category-navigation-link:focus-visible {
+  outline: 2px solid var(--gee-gold, #efb51b);
+  outline-offset: 2px;
 }
 
 .category-navigation-link.active {
   color: #fff;
-  background: rgba(255, 174, 0, 0.14);
-  border-color: rgba(255, 174, 0, 0.45);
+  background: rgba(239, 181, 27, 0.12);
+  border-color: rgba(239, 181, 27, 0.48);
 }
 
 .category-navigation-link.home-link {
   grid-column: 1 / -1;
   justify-content: center;
-  color: #ffcf33;
-  border-color: rgba(255, 174, 0, 0.18);
+  color: var(--gee-gold, #efb51b);
+  border-color: rgba(239, 181, 27, 0.18);
 }
 
 .category-navigation-accent {
@@ -327,7 +346,7 @@
 
 .navbar .dropdown-menu button {
   background: none;
-  color: black;
+  color: var(--gee-paper, #f5f0e4);
   border: none;
   cursor: pointer;
   padding: 10px 15px;
@@ -386,8 +405,7 @@
   }
 
   .category-navigation-overlay {
-    background: #121f31;
-    backdrop-filter: none;
+    background: var(--gee-navy-950, #07111d);
   }
 
   .category-navigation-menu {
@@ -398,9 +416,9 @@
     padding: 1.25rem 1rem 2rem;
     overflow-y: auto;
     background:
-      radial-gradient(circle at 15% 10%, rgba(255, 236, 0, 0.08), transparent 28%),
-      radial-gradient(circle at 85% 90%, rgba(255, 23, 68, 0.1), transparent 30%),
-      #121f31;
+      radial-gradient(circle, rgba(245, 240, 228, 0.045) 0.7px, transparent 0.9px) 0 0 / 18px 18px,
+      linear-gradient(135deg, transparent 0 76%, rgba(199, 45, 58, 0.1) 76% 88%, transparent 88%),
+      var(--gee-navy-950, #07111d);
     border: 0;
     border-radius: 0;
     box-shadow: none;
@@ -471,5 +489,5 @@
 }
 
 .navbar .dropdown-menu button:hover {
-  color: #ffec00;
+  color: var(--gee-gold, #efb51b);
 }

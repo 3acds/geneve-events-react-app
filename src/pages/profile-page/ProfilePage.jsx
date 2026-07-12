@@ -79,7 +79,11 @@ const ProfilePage = () => {
   };
 
   if (!user) {
-    return <div>{t('profile.loginRequired')}</div>;
+    return (
+      <div className="profile-page-container">
+        <p className="profile-login-required">{t('profile.loginRequired')}</p>
+      </div>
+    );
   }
 
   return (

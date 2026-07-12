@@ -1,77 +1,141 @@
 .profile-page-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(to right, #141E30     , #243B55 );
-  padding: 20px;
+  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100svh - var(--navbar-height));
+  margin-top: var(--navbar-height);
+  padding: clamp(2rem, 6vw, 4rem) 1rem;
+  color: var(--gee-paper, #f5f0e4);
+  background:
+    linear-gradient(125deg, transparent 0 12%, rgba(199, 45, 58, 0.07) 12% 18%, transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(239, 181, 27, 0.08), transparent 20rem);
 }
 
-.profile-page-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.profile-page-content,
+.profile-login-required {
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 26rem);
+  overflow: hidden;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  color: var(--gee-paper, #f5f0e4);
+  background: linear-gradient(145deg, rgba(13, 28, 44, 0.98), rgba(7, 17, 29, 0.98));
+  border: 1px solid var(--gee-line, rgba(239, 181, 27, 0.25));
+  border-radius: 4px;
+  box-shadow: var(--gee-shadow-panel, 0 22px 55px rgba(0, 0, 0, 0.35));
   text-align: center;
-  width: 100%;
-  max-width: 400px;
 }
 
-.profile-page h1 {
-  font-size: 2em;
-  margin-bottom: 20px;
-  color: #333;
+.profile-page-content::before,
+.profile-login-required::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gee-gold, #efb51b), var(--gee-red, #c72d3a) 64%, transparent 64%);
+}
+
+.profile-page-content::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: -2rem;
+  bottom: -2rem;
+  width: 8rem;
+  height: 8rem;
+  background:
+    radial-gradient(circle, rgba(239, 181, 27, 0.17) 0.7px, transparent 0.9px) 0 0 / 12px 12px,
+    linear-gradient(135deg, transparent 45%, rgba(199, 45, 58, 0.16) 46% 63%, transparent 64%);
+  pointer-events: none;
+}
+
+.profile-page-content h1 {
+  margin-bottom: 1.35rem;
+  color: var(--gee-paper, #f5f0e4);
+  font-size: clamp(1.75rem, 6vw, 2.35rem);
 }
 
 .profile-picture {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .profile-picture img {
-  width: 150px;
-  height: 150px;
+  width: 8rem;
+  height: 8rem;
+  border: 2px solid rgba(239, 181, 27, 0.6);
   border-radius: 50%;
+  object-fit: cover;
   cursor: pointer;
-  border: 2px solid #ddd;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.profile-picture img.editable-avatar:hover {
-  border-color: #007bff;
+.profile-picture img.editable-avatar:hover,
+.profile-picture img.editable-avatar:focus-visible {
+  border-color: var(--gee-gold, #efb51b);
+  transform: scale(1.02);
 }
 
 .profile-details {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .profile-details h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #555;
+  margin-bottom: 0.75rem;
+  color: var(--gee-muted, #b8c3cf);
+  font-size: 1.35rem;
 }
 
 .profile-details input {
-  font-size: 1em;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: calc(100% - 22px);
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.7rem 0.8rem;
+  color: var(--gee-paper, #f5f0e4);
+  background: rgba(7, 17, 29, 0.8);
+  border: 1px solid rgba(245, 240, 228, 0.18);
+  border-radius: 3px;
+  font-size: 1rem;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 1em;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
+.profile-details input:focus-visible {
+  border-color: var(--gee-gold, #efb51b);
+  outline: 2px solid rgba(239, 181, 27, 0.35);
+  outline-offset: 2px;
+}
+
+.profile-page-content > button {
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.65rem 1.1rem;
+  color: var(--gee-navy-950, #07111d);
+  background: var(--gee-gold, #efb51b);
+  border: 1px solid var(--gee-gold, #efb51b);
+  border-radius: 3px;
+  font-size: 0.9rem;
+  font-weight: 800;
   cursor: pointer;
-  margin-top: 10px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+.profile-page-content > button:hover {
+  background: #f5c84f;
+  border-color: #f5c84f;
+  transform: translateY(-1px);
 }
 
+.profile-page-content > button:focus-visible {
+  outline: 2px solid var(--gee-paper, #f5f0e4);
+  outline-offset: 3px;
+}
 
+@media (prefers-reduced-motion: reduce) {
+  .profile-picture img,
+  .profile-page-content > button {
+    transition: none;
+  }
+
+  .profile-picture img.editable-avatar:hover,
+  .profile-page-content > button:hover {
+    transform: none;
+  }
+}

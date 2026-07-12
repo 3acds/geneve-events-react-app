@@ -65,8 +65,8 @@ const EventDetailPage = () => {
   return (
     <div className="event-detail-container">
       <button className="event-detail-back" type="button" onClick={handleBack}>
-        <span aria-hidden="true">←</span>
-        {t('eventDetail.backToEvents')}
+        <span className="event-detail-back-icon" aria-hidden="true">←</span>
+        <span className="event-detail-back-label">{t('eventDetail.backToEvents')}</span>
       </button>
       <div
         className="event-detail-background"

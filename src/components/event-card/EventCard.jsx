@@ -152,13 +152,14 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
                 style={{ '--corner-color': getColorFromGradient(cornerColor) }}
               >
                 <img
-                  className="event-img"
+                  className={`event-img ${event.img ? '' : 'is-placeholder'}`.trim()}
                   src={event.img || EVENT_PLACEHOLDER_IMAGE}
                   alt=""
                   loading={index < 6 ? 'eager' : 'lazy'}
                   fetchPriority={index < 3 ? 'high' : 'auto'}
                   onError={(imageEvent) => {
                     imageEvent.currentTarget.onerror = null;
+                    imageEvent.currentTarget.classList.add('is-placeholder');
                     imageEvent.currentTarget.src = EVENT_PLACEHOLDER_IMAGE;
                   }}
                 />

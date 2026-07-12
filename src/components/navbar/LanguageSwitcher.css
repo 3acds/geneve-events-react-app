@@ -6,10 +6,10 @@
   gap: 0.28rem;
   width: 4rem;
   min-height: 2.35rem;
-  color: #f4f7fb;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
+  color: var(--gee-paper, #f5f0e4);
+  background: rgba(24, 48, 71, 0.5);
+  border: 1px solid rgba(245, 240, 228, 0.18);
+  border-radius: 3px;
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.04em;
@@ -19,7 +19,7 @@
 .language-switcher:hover,
 .language-switcher:focus-within {
   background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 190, 46, 0.68);
+  border-color: rgba(239, 181, 27, 0.68);
 }
 
 .language-switcher select {
@@ -34,7 +34,7 @@
 }
 
 .language-switcher:focus-within {
-  outline: 2px solid #ffbf2f;
+  outline: 2px solid var(--gee-gold, #efb51b);
   outline-offset: 2px;
 }
 

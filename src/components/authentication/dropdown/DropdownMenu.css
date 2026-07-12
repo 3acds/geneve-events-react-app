@@ -51,16 +51,15 @@
   display: none;
   position: absolute;
   justify-content: flex-end;
-  background: rgba(18, 31, 49, 0.97);
-  border: 1px solid rgba(255, 174, 0, 0.38);
-  border-radius: 10px;
+  background: rgba(7, 17, 29, 0.98);
+  border: 1px solid var(--gee-line, rgba(239, 181, 27, 0.25));
+  border-radius: 4px;
   min-width: 260px;
   z-index: 100;
   top: calc(100% + 0.7rem);
   right: 0;
 
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42);
-  backdrop-filter: blur(14px);
   overflow: hidden;
 }
 
@@ -69,7 +68,7 @@
   position: absolute;
   inset: 0 0 auto;
   height: 3px;
-  background: linear-gradient(90deg, #ffec00, #ff7a00 55%, #ff1744);
+  background: linear-gradient(90deg, var(--gee-gold, #efb51b), var(--gee-red, #c72d3a) 62%, transparent 86%);
 }
 
 .dropdown-content.left-aligned {

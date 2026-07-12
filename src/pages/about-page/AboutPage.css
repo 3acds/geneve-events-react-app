@@ -5,36 +5,49 @@
   margin-top: var(--navbar-height);
   padding: clamp(2rem, 7vw, 6rem) clamp(1rem, 5vw, 3rem);
   place-items: center;
-  color: #fff;
+  color: var(--gee-paper, #f5f0e4);
   background:
-    radial-gradient(circle at 15% 15%, rgba(255, 236, 0, 0.1), transparent 30%),
-    radial-gradient(circle at 85% 80%, rgba(255, 23, 68, 0.12), transparent 32%),
-    linear-gradient(135deg, #141e30, #243b55);
+    linear-gradient(125deg, transparent 0 78%, rgba(199, 45, 58, 0.08) 78% 88%, transparent 88%),
+    radial-gradient(circle at 14% 18%, rgba(239, 181, 27, 0.08), transparent 24rem);
 }
 
 .about-project-card {
   position: relative;
+  isolation: isolate;
   width: min(100%, 58rem);
   padding: clamp(1.5rem, 5vw, 3.5rem);
   overflow: hidden;
-  background: rgba(12, 23, 39, 0.76);
-  border: 1px solid rgba(255, 174, 0, 0.32);
-  border-radius: 16px;
-  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
+  background: linear-gradient(145deg, rgba(13, 28, 44, 0.97), rgba(7, 17, 29, 0.98));
+  border: 1px solid var(--gee-line, rgba(239, 181, 27, 0.25));
+  border-radius: 4px;
+  box-shadow: var(--gee-shadow-panel, 0 22px 55px rgba(0, 0, 0, 0.35));
 }
 
 .about-project-card::before {
   content: '';
   position: absolute;
   inset: 0 0 auto;
-  height: 4px;
-  background: linear-gradient(90deg, #ffec00, #ff7a00 55%, #ff1744);
+  height: 3px;
+  background: linear-gradient(90deg, var(--gee-gold, #efb51b), var(--gee-red, #c72d3a) 62%, transparent 62%);
+}
+
+.about-project-card::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -1.5rem;
+  right: -1.5rem;
+  width: 9rem;
+  height: 9rem;
+  background:
+    radial-gradient(circle, rgba(239, 181, 27, 0.2) 0.7px, transparent 0.9px) 0 0 / 12px 12px,
+    linear-gradient(135deg, transparent 46%, rgba(199, 45, 58, 0.14) 47% 61%, transparent 62%);
+  pointer-events: none;
 }
 
 .about-project-eyebrow {
   margin-bottom: 0.65rem;
-  color: #ffbd19;
+  color: var(--gee-gold, #efb51b);
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -45,14 +58,12 @@
   margin-bottom: 1rem;
   font-size: clamp(2.4rem, 8vw, 4rem);
   line-height: 1;
-  background: linear-gradient(90deg, #ffec00, #ff8a00, #ff1744);
-  background-clip: text;
-  color: transparent;
+  color: var(--gee-paper, #f5f0e4);
 }
 
 .about-project-intro {
   max-width: 45rem;
-  color: #f2f5f8;
+  color: var(--gee-paper, #f5f0e4);
   font-size: clamp(1.05rem, 2.5vw, 1.3rem);
   line-height: 1.65;
 }
@@ -66,20 +77,20 @@
 
 .about-project-sections section {
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(24, 48, 71, 0.38);
+  border: 1px solid rgba(245, 240, 228, 0.09);
+  border-radius: 3px;
 }
 
 .about-project-sections h2 {
   margin-bottom: 0.65rem;
-  color: #ffbf26;
+  color: var(--gee-gold, #efb51b);
   font-size: 1.05rem;
 }
 
 .about-project-sections p,
 .about-project-note {
-  color: #cfd6df;
+  color: var(--gee-muted, #b8c3cf);
   line-height: 1.65;
 }
 

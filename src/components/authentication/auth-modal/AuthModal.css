@@ -15,9 +15,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
-  background: linear-gradient(145deg, rgba(26, 44, 68, 0.98), rgba(13, 24, 40, 0.98));
-  border: 1px solid rgba(255, 174, 0, 0.4);
-  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(13, 28, 44, 0.98), rgba(7, 17, 29, 0.99));
+  border: 1px solid var(--gee-line, rgba(239, 181, 27, 0.25));
+  border-radius: 4px;
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.55);
   padding: clamp(1.25rem, 5vw, 2rem);
   width: 90%;
@@ -39,7 +39,7 @@
   gap: 0.6rem;
   margin-bottom: 1rem;
   font-weight: 700;
-  color: #ffb000;
+  color: var(--gee-gold, #efb51b);
 }
 
 .auth-modal-provider .google-icon {
@@ -56,18 +56,18 @@
 .auth-modal-buttons button {
   padding: 10px 20px;
   border: none;
-  border-radius: 7px;
+  border-radius: 3px;
   cursor: pointer;
 }
 
 .auth-modal-buttons button:first-child {
-  background: linear-gradient(90deg, #ffec00, #ff8a00);
-  color: #111827;
+  background: var(--gee-gold, #efb51b);
+  color: var(--gee-navy-950, #07111d);
   font-weight: 700;
 }
 
 .auth-modal-buttons button:first-child:hover {
-  background: linear-gradient(90deg, #fff34a, #ff9d2e);
+  background: #f5c84f;
 }
 
 .auth-modal-buttons button:last-child {
