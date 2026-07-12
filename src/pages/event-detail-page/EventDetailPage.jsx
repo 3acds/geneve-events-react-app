@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { fetchEventById } from '../../services/api/api';
+import { fetchEventById, getCachedEventById } from '../../services/api/api';
 import { formatEventDate } from '../../utils/date';
 import './EventDetailPage.css';
 
@@ -8,19 +8,38 @@ const EventDetailPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { eventId } = useParams();
-  const [event, setEvent] = useState(location.state?.event || null);
-  const [loading, setLoading] = useState(!location.state?.event);
+  const navigationEvent = location.state?.event || null;
+  const [event, setEvent] = useState(() => navigationEvent || getCachedEventById(eventId));
+  const [loading, setLoading] = useState(() => !navigationEvent && !getCachedEventById(eventId));
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (event) return;
     let active = true;
+    const cachedEvent = navigationEvent || getCachedEventById(eventId);
+
+    if (cachedEvent) {
+      setEvent(cachedEvent);
+      setLoading(false);
+    } else {
+      setEvent(null);
+      setLoading(true);
+    }
+    setError('');
+
     fetchEventById(eventId)
-      .then((data) => active && setEvent(data))
-      .catch(() => active && setError("L'événement n'a pas été trouvé."))
+      .then((data) => {
+        if (!active) return;
+        setEvent(data);
+        setError('');
+      })
+      .catch(() => {
+        if (!active) return;
+        setEvent(null);
+        setError("L'événement n'a pas été trouvé.");
+      })
       .finally(() => active && setLoading(false));
     return () => { active = false; };
-  }, [event, eventId]);
+  }, [eventId, navigationEvent]);
 
   if (loading) {
     return <div className="loading-spinner" role="status" aria-label="Chargement"></div>;

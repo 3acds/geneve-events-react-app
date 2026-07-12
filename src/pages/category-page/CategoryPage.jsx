@@ -30,6 +30,7 @@ const CategoryPage = () => {
           />
         </div>
         <EventCard
+          key={tag}
           tag={tag}
           cornerColor={cornerColor}
           searchQuery={searchQuery}

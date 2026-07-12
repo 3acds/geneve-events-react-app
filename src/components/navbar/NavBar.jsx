@@ -65,7 +65,14 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link className="navbar-brand" to="/" aria-label="Geneva Events Explorer — accueil">
-        GEE
+        <img
+          className="navbar-brand-flag"
+          src="/geneva-flag.svg"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
+        <span className="navbar-brand-text">GEE</span>
       </Link>
 
       <div className="site-navigation" ref={categoryMenuRef}>

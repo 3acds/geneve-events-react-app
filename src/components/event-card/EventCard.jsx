@@ -1,8 +1,8 @@
 // React imports
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 // Component imports
-import { fetchEventsByTag, fetchEvents } from '../../services/api/api';
+import { fetchEventsByTag, fetchEvents, getCachedEvents } from '../../services/api/api';
 import { formatEventDate } from '../../utils/date';
 // CSS imports
 import './EventCard.css'; 
@@ -21,44 +21,55 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
   const location = useLocation();
   const listStateKey = `gee:event-list:${location.pathname}`;
   const restoredScroll = useRef(false);
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState(() => getCachedEvents(tag) || []);
+  const [loading, setLoading] = useState(() => getCachedEvents(tag) === null);
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(
     () => Math.max(EVENTS_PER_BATCH, readListState(listStateKey).visibleCount || 0),
   );
 
   useEffect(() => {
-    const loadEvents = async () => {
-      setLoading(true);
-      setError(null);
+    let active = true;
+    const cachedEvents = getCachedEvents(tag);
 
+    if (cachedEvents !== null) {
+      setEvents(cachedEvents);
+      setLoading(false);
+    } else {
+      setEvents([]);
+      setLoading(true);
+    }
+    setError(null);
+
+    const loadEvents = async () => {
       for (let attempt = 0; attempt < 3; attempt += 1) {
         try {
           const data = tag === 'all' ? await fetchEvents() : await fetchEventsByTag(tag);
+          if (!active) return;
           setEvents(Array.isArray(data) ? data : []);
           setLoading(false);
           return;
         } catch (loadError) {
+          if (!active) return;
           if (attempt === 2) {
             setError('Failed to load events after multiple attempts. Please try again later.');
             setLoading(false);
+          } else {
+            await new Promise((resolve) => setTimeout(resolve, 300 * (attempt + 1)));
           }
         }
       }
     };
 
     loadEvents();
+    return () => { active = false; };
   }, [tag]);
 
-  useEffect(() => {
-    setFilteredEvents(
-      events.filter(event =>
-        event.title?.toLocaleLowerCase().includes(searchQuery.trim().toLocaleLowerCase())
-      )
-    );
-  }, [searchQuery, events]);
+  const filteredEvents = useMemo(() => (
+    events.filter(event =>
+      event.title?.toLocaleLowerCase().includes(searchQuery.trim().toLocaleLowerCase())
+    )
+  ), [searchQuery, events]);
 
   useEffect(() => {
     const savedState = searchQuery ? {} : readListState(listStateKey);

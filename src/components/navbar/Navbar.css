@@ -25,19 +25,72 @@
 }
 
 .navbar-brand {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
   margin: 0;
+  padding: 0.25rem 0.3rem;
   background: none;
   color: #111;
   font-size: 24px;
   font-weight: bold;
   line-height: 1;
+  text-decoration: none;
   text-shadow: 0px 4px 4px rgba(0,0,0,0.25);
+  transition: color 0.22s ease, transform 0.22s ease;
+}
+
+.navbar-brand-flag {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.35rem;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  object-fit: cover;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(-7deg) scale(0.68);
+  transition:
+    opacity 0.2s ease,
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+}
+
+.navbar-brand-text {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.22s ease, text-shadow 0.22s ease;
 }
 
 .navbar-brand:hover,
 .navbar-brand:focus-visible {
   color: #fff;
-  outline: none;
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.navbar-brand:hover .navbar-brand-flag,
+.navbar-brand:focus-visible .navbar-brand-flag {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
+}
+
+.navbar-brand:hover .navbar-brand-text,
+.navbar-brand:focus-visible .navbar-brand-text {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.95),
+    0 3px 8px rgba(0, 0, 0, 0.55);
+  transform: scale(1.03);
+}
+
+.navbar-brand:focus-visible {
+  border-radius: 0.35rem;
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 
 .site-navigation {
@@ -287,6 +340,14 @@
   .navigation-label,
   .navigation-chevron {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-brand,
+  .navbar-brand-flag,
+  .navbar-brand-text {
+    transition-duration: 0.01ms;
   }
 }
 
