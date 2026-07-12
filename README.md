@@ -1,4 +1,4 @@
-git clone https://github.com/3acds/geneve-events-react-app.git# Geneva Events  (GEE)
+# Geneva Events (GEE)
 Welcome to Geneva Events Agenda, your one-stop solution for finding and managing events in Geneva. This application aims to simplify the task of discovering events happening in the area with a user-friendly and clean UI.
 
 ## Features
