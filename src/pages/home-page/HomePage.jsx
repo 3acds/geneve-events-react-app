@@ -17,6 +17,7 @@ const HomePage = () => {
             className="category-card"
             to={`/category/${encodeURIComponent(event.apiTag)}`}
             state={{ displayTag: event.displayTag, cornerColor: event.cornerColor }}
+            style={{ '--title-color': getColorFromGradient(event.cornerColor) }}
           >
             <img
               className='event-img'
@@ -26,7 +27,7 @@ const HomePage = () => {
               fetchPriority={index < 2 ? 'high' : 'auto'}
             />
             <div className="corner-tag" style={{ background: event.cornerColor }}></div>
-            <h2 style={{ color: getColorFromGradient(event.cornerColor) }}>{event.displayTag}</h2>
+            <h2>{event.displayTag}</h2>
           </Link>
         ))}
       </div>

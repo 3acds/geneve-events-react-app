@@ -104,6 +104,7 @@
   color: var(--corner-color); 
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .event-card:hover,
@@ -188,6 +189,40 @@
 
   .event-card {
     max-width: 13rem;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .event-card,
+  .event-card img,
+  .event-card h2,
+  .event-card .corner-tag {
+    transition: none;
+  }
+
+  .event-card:hover,
+  .event-card:active,
+  .event-card:focus-visible {
+    transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .event-card:hover img,
+  .event-card:focus-visible img {
+    opacity: 1;
+  }
+
+  .event-card:hover h2,
+  .event-card:focus-visible h2 {
+    color: inherit;
+  }
+
+  .event-card:hover .corner-tag,
+  .event-card:focus-visible .corner-tag {
+    width: 30px;
+    height: 30px;
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    opacity: 1;
   }
 }
 
