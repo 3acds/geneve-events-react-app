@@ -76,7 +76,7 @@ const EventCard = ({ tag, cornerColor, handleCardClick, searchQuery }) => {
               role="button"
               tabIndex="0"
             >
-              <img className="event-img" src={event.img || "/event-placeholder.jpg"} alt="" onError={(imageEvent) => {imageEvent.currentTarget.onerror = null; imageEvent.currentTarget.src = "/event-placeholder.jpg";}}/>
+              <img className="event-img" src={event.img || "/event-placeholder.svg"} alt="" onError={(imageEvent) => {imageEvent.currentTarget.onerror = null; imageEvent.currentTarget.src = "/event-placeholder.svg";}}/>
               <div className="corner-tag" style={{ background: cornerColor }}></div>
               <h2>{event.title}</h2>
               <time className="event-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>

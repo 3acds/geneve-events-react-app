@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 640" role="img" aria-labelledby="title description">
+  <title id="title">Image indisponible</title>
+  <desc id="description">Fond abstrait aux couleurs de Geneva Events Explorer</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#141e30"/><stop offset="1" stop-color="#243b55"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffec00"/><stop offset="1" stop-color="#ff1744"/></linearGradient>
+  </defs>
+  <rect width="440" height="640" fill="url(#background)"/>
+  <circle cx="220" cy="280" r="92" fill="none" stroke="url(#accent)" stroke-width="14"/>
+  <path d="M170 280h100M220 230v100" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".85"/>
+  <text x="220" y="430" fill="#fff" font-family="sans-serif" font-size="30" text-anchor="middle">GEE</text>
+</svg>

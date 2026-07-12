@@ -1,48 +1,33 @@
-const API_URL = 'https://geneva-events-api.onrender.com';
+const API_URL = (import.meta.env.VITE_API_URL || 'https://geneva-events-api.onrender.com')
+  .replace(/\/$/, '');
+
+const requestJson = async (path, errorMessage) => {
+  const response = await fetch(`${API_URL}${path}`);
+  if (!response.ok) throw new Error(`${errorMessage} (${response.status})`);
+  return response.json();
+};
 
 // Fetch all events
 const fetchEvents = async () => {
-  try {
-    const response = await fetch(`${API_URL}/events`);
-    if (!response.ok) {
-      throw new Error(`Error fetching events: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Fetching events failed:', error);
-    throw error;
-  }
+  return requestJson('/events', 'Unable to fetch events');
+};
+
+const fetchEventById = async (eventId) => {
+  return requestJson(`/events/${encodeURIComponent(eventId)}`, 'Unable to fetch event');
 };
 
 // Fetch events by tag
 const fetchEventsByTag = async (tag) => {
-  try {
-    const response = await fetch(`${API_URL}/events/tag/${tag}`);
-    if (!response.ok) {
-      throw new Error(`Error fetching events by tag: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Fetching events by TAG failed:', error);
-    throw error;
-  }
+  return requestJson(`/events/tag/${encodeURIComponent(tag)}`, 'Unable to fetch events by tag');
 };
 
 // Fetch events by date
 const fetchEventsByDate = async (day, month, year) => {
-  try {
-    const response = await fetch(`${API_URL}/events/date?day=${day}&month=${month}&year=${year}`);
-    if (!response.ok) {
-      throw new Error(`Error fetching events by date: ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Fetching events by DATE failed:', error);
-    throw error;
-  }
+  const params = new URLSearchParams();
+  if (day != null) params.set('day', day);
+  if (month != null) params.set('month', month);
+  if (year != null) params.set('year', year);
+  return requestJson(`/events/date?${params}`, 'Unable to fetch events by date');
 };
 
-export { fetchEvents, fetchEventsByTag, fetchEventsByDate };
+export { fetchEventById, fetchEvents, fetchEventsByTag, fetchEventsByDate };

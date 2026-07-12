@@ -26,13 +26,27 @@ cd geneve-events-react-app
 ```
 Install the dependencies:
 ```
-npm install
+npm ci
+```
+Create a local environment file and point it at the API:
+```
+cp .env.example .env.local
 ```
 Start the development server:
 ```
 npm run dev
 ```
-The application should now be running on localhost
+The application should now be running at `http://localhost:5173`.
+
+## Deployment
+
+The included `render.yaml` builds the project as a Render static site and
+rewrites client-side routes to `index.html`. Set `VITE_API_URL` at build time
+to the public URL of the independently deployed API. Do not add a trailing
+slash.
+
+The API must include this frontend's public origin in its comma-separated
+`CORS_ORIGINS` environment variable.
 
 ## Usage
 Home Page: Upon opening the app, you will be greeted with the home page displaying different categories of events.
@@ -56,4 +70,3 @@ Thanks to the Geneva official website for providing the event data.
 Special thanks to [**Antonio Pisanello**](https://github.com/moiap13), [**Nicolas Fazio**](https://github.com/FazioNico) & **Rolf Hauri**.
 
 For more information, visit the live app at [gee.bsilva.ch](https://gee.bsilva.ch/).
-
