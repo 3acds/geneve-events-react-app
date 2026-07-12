@@ -2,13 +2,14 @@
   display:flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 40px 60px;
+  gap: 2.5rem;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 6vw, 4rem) 2rem;
   color: white;
   background-color: rgb(28, 29, 42);
   min-height: 12rem;
 }
 
-a {
+.footer a {
   text-decoration: none;
   background: linear-gradient(to right, #FAFF00, #ff0000);
   background-clip: text;
@@ -16,16 +17,28 @@ a {
 }
 
 .footer-main-div {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(10rem, 1fr));
+  gap: clamp(2rem, 6vw, 5rem);
+  width: min(100%, 75rem);
+  margin: 0 auto;
 }
 
-.gee, .about, .contact{
+.footer-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 0 clamp(0rem, 3vw, 3.75rem);
+  align-items: flex-start;
+}
+
+.footer-section h3 {
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.footer-category-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.2rem 1.25rem;
 }
 
 .content-padding {
@@ -42,7 +55,12 @@ a {
 }
 
 .copyright {
-  padding-top:45px;
+  width: min(100%, 75rem);
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #c8ced8;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 45rem) {
@@ -52,12 +70,18 @@ a {
   }
 
   .footer-main-div {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
   .copyright {
     padding-top: 0;
     text-align: center;
+  }
+}
+
+@media (max-width: 28rem) {
+  .footer-category-links {
+    grid-template-columns: 1fr;
   }
 }

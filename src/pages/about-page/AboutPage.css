@@ -1,0 +1,96 @@
+.about-page {
+  display: grid;
+  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100svh - var(--navbar-height));
+  margin-top: var(--navbar-height);
+  padding: clamp(2rem, 7vw, 6rem) clamp(1rem, 5vw, 3rem);
+  place-items: center;
+  color: #fff;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255, 236, 0, 0.1), transparent 30%),
+    radial-gradient(circle at 85% 80%, rgba(255, 23, 68, 0.12), transparent 32%),
+    linear-gradient(135deg, #141e30, #243b55);
+}
+
+.about-project-card {
+  position: relative;
+  width: min(100%, 58rem);
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  background: rgba(12, 23, 39, 0.76);
+  border: 1px solid rgba(255, 174, 0, 0.32);
+  border-radius: 16px;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+}
+
+.about-project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #ffec00, #ff7a00 55%, #ff1744);
+}
+
+.about-project-eyebrow {
+  margin-bottom: 0.65rem;
+  color: #ffbd19;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.about-project-card h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  line-height: 1;
+  background: linear-gradient(90deg, #ffec00, #ff8a00, #ff1744);
+  background-clip: text;
+  color: transparent;
+}
+
+.about-project-intro {
+  max-width: 45rem;
+  color: #f2f5f8;
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+  line-height: 1.65;
+}
+
+.about-project-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: clamp(1.75rem, 5vw, 3rem) 0;
+}
+
+.about-project-sections section {
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.about-project-sections h2 {
+  margin-bottom: 0.65rem;
+  color: #ffbf26;
+  font-size: 1.05rem;
+}
+
+.about-project-sections p,
+.about-project-note {
+  color: #cfd6df;
+  line-height: 1.65;
+}
+
+.about-project-note {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 40rem) {
+  .about-project-sections {
+    grid-template-columns: 1fr;
+  }
+}

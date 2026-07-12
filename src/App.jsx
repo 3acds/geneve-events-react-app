@@ -6,6 +6,7 @@ import HomePage from './pages/home-page/HomePage';
 import CategoryPage from './pages/category-page/CategoryPage';
 import EventDetailPage from './pages/event-detail-page/EventDetailPage';
 import ProfilePage from './pages/profile-page/ProfilePage';
+import AboutPage from './pages/about-page/AboutPage';
 import Footer from './components/footer/Footer';
 // Context imports
 import { AuthProvider } from './context/AuthContext';
@@ -29,6 +30,7 @@ function App() {
                   <Route path="/category/:tag" element={<CategoryPage />} />
                   <Route path="/event/:eventId" element={<EventDetailPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/about" element={<AboutPage />} />
                 </Routes> 
               </div>
               <Footer />
@@ -42,6 +44,5 @@ function App() {
 }
 
 export default App;
-
 
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; 
+import categories from '../../pages/home-page/data/static-data.json';
 import './Footer.css';
 
 const Footer = () => {
@@ -10,28 +11,37 @@ const Footer = () => {
     <>
       <footer className="footer">
         <div className='footer-main-div'>
-          <div className='gee'>
+          <div className='gee footer-section'>
             <h3>GEE</h3>
-            <div className='gee-content content-padding content-direction'>
-              <Link to="/category/all" state={{ displayTag: 'Tous les évènements' }} className='content-element-margin'>Tous les évènements</Link>
+            <div className='gee-content footer-category-links'>
+              <Link to="/" className='content-element-margin'>Accueil</Link>
+              {categories.categories.map((category) => (
+                <Link
+                  key={category.apiTag}
+                  to={`/category/${encodeURIComponent(category.apiTag)}`}
+                  state={{ displayTag: category.displayTag, cornerColor: category.cornerColor }}
+                  className='content-element-margin'
+                >
+                  {category.displayTag}
+                </Link>
+              ))}
               {user && (
                 <Link to="/profile" className='content-element-margin'>
-                  Profile
+                  Profil
                 </Link>
               )}
             </div>
           </div>
-          <div className='about'>
+          <div className='about footer-section'>
             <h3>À propos</h3>
             <div className='about-content content-padding content-direction'>
-              <a href="https://bsilva.ch/" className='content-element-margin'>Portfolio</a>
+              <Link to="/about" className='content-element-margin'>Le projet GEE</Link>
             </div>
           </div>
-          <div className='contact'>
+          <div className='contact footer-section'>
             <h3>Contact</h3>
             <div className='contact-content content-padding content-direction'>
-              <p className='content-element-margin'>Tel: <a href="tel:+41784031610">078 403 16 10</a></p>
-              <p className='content-element-margin'>Email: <a href="mailto:bruno@bsilva.ch">bruno@bsilva.ch</a> </p>
+              <a href="https://bsilva.ch/" target="_blank" rel="noreferrer" className='content-element-margin'>Portfolio</a>
             </div>   
           </div>
         </div>
