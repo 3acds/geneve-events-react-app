@@ -1,49 +1,60 @@
+.home-page {
+  width: min(100%, 90rem);
+  min-height: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: clamp(5rem, 9vw, 7rem) clamp(1rem, 4vw, 4rem) clamp(4rem, 8vw, 8rem);
+}
+
 .home-title {
-  margin-top: 2.5em;
-  margin-bottom: 1.5em;
+  margin: 0 0 clamp(2.5rem, 7vw, 6rem);
   text-align: center;
-  font-size: 4rem;
+  font-size: clamp(2.4rem, 8vw, 4rem);
   background: linear-gradient(to right, #FFEC00 30%, #FF0000 85%);
   text-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
   background-clip: text;
   color: transparent;
 }
 
-.event-cards {
+.category-cards {
   display: grid;
-  grid-template-columns: repeat(5, 220px); 
-  gap: 70px; 
-  justify-content: center;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: clamp(1.25rem, 4vw, 3.5rem);
   background: transparent;
   margin: 0 auto;
 }
 
-.event-card {
+.category-card {
   position: relative;
   background: #333;
   border: 1px solid #444;
   border-radius: 8px;
   overflow: hidden;
-  width: 220px; 
-  height: 320px;
+  width: 100%;
+  max-width: 20rem;
+  aspect-ratio: 11 / 16;
+  justify-self: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: #fff;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
 }
 
-.event-card img {
+.category-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3s ease;
 }
 
-.event-card:hover img {
+.category-card:hover img,
+.category-card:focus-visible img {
   opacity: 0.3;
 }
 
-.event-card h2 {
+.category-card h2 {
   margin: 0;
   font-size: 1.5em;
   position: absolute;
@@ -54,13 +65,15 @@
   text-align: center;
   width: 100%;
   z-index: 1;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 1.5); 
+  box-sizing: border-box;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
   background: rgba(0, 0, 0, 0.5);
   padding: 5px;
   border-radius: 5px;
 }
 
-.event-card:hover h2 {
+.category-card:hover h2,
+.category-card:focus-visible h2 {
   color: #fff !important;
 }
 
@@ -75,10 +88,28 @@
   transition: all 0.3s ease;
 }
 
-.event-card:hover .corner-tag {
+.category-card:hover .corner-tag,
+.category-card:focus-visible .corner-tag {
   width: 100%;
   height: 100%;
   background: rgba(255, 0, 0, 0.5); 
   clip-path: none;
   opacity: 0.5; 
+}
+
+.category-card:hover,
+.category-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+@media (max-width: 35rem) {
+  .category-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .category-card {
+    max-width: 18rem;
+  }
 }

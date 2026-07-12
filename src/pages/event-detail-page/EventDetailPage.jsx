@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useNotification } from '../../context/NotificationContext';
+import { formatEventDate } from '../../utils/date';
 import './EventDetailPage.css';
 
 const EventDetailPage = () => {
@@ -22,7 +23,9 @@ const EventDetailPage = () => {
       <div className="event-detail-info">
         <h1 className="event-detail-title">{event.title}</h1>
         <p className="event-detail-description">{event.description}</p>
-        <p className="event-detail-date">{event.date}</p>
+        <time className="event-detail-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>
+          {formatEventDate(event)}
+        </time>
       </div>
     </div>
   );

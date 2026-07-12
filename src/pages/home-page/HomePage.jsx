@@ -62,16 +62,18 @@ const HomePage = () => {
 
   return (
     <>
+      <main className="home-page">
       <h1 className='home-title'>Catégories</h1>
-      <div className="event-cards">
+      <div className="category-cards">
         {events.map((event, index) => (
-          <div key={index} className="event-card" onClick={() => handleCardClick(event.apiTag, event.displayTag, event.cornerColor)}>
+          <button key={event.apiTag || index} className="category-card" onClick={() => handleCardClick(event.apiTag, event.displayTag, event.cornerColor)}>
             <img className='event-img' src={event.img} alt={event.displayTag} />
             <div className="corner-tag" style={{ background: event.cornerColor }}></div>
             <h2 style={{ color: getColorFromGradient(event.cornerColor) }}>{event.displayTag}</h2>
-          </div>
+          </button>
         ))}
       </div>
+      </main>
     </>
   );
 };

@@ -2,7 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4vh;
+  box-sizing: border-box;
+  min-height: 3.75rem;
   padding: 10px 30px;
   background: linear-gradient(to right, #FAFF00, #ff0000);
   color: black;
@@ -36,9 +37,23 @@
   border: none;
   cursor: pointer;
   padding: 10px 15px;
-  margin-right: 40px;
+  margin-right: 0;
   font-size: 18px;
   display: flex;
+}
+
+@media (max-width: 35rem) {
+  .navbar {
+    padding-inline: 1rem;
+  }
+
+  .navbar .dropdown-menu button {
+    max-width: 70vw;
+    overflow: hidden;
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .navbar .dropdown-menu button:hover {

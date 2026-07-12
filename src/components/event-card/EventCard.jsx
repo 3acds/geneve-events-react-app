@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 // Component imports
 import { fetchEventsByTag, fetchEvents } from '../../services/api/api';
-// Context imports
-import { useNotification } from '../../context/NotificationContext';
+import { formatEventDate } from '../../utils/date';
 // CSS imports
 import './EventCard.css'; 
 
@@ -12,36 +11,34 @@ const EventCard = ({ tag, cornerColor, handleCardClick, searchQuery }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { showNotification } = useNotification();
-  const retryLimit = 3; 
-  let retryCount = 0; 
 
   useEffect(() => {
     const loadEvents = async () => {
-      try {
-        const data = tag === 'all' ? await fetchEvents() : await fetchEventsByTag(tag);
-        setEvents(data);
-        setFilteredEvents(data);
-      } catch (error) {
-        if (retryCount < retryLimit) {
-          retryCount += 1;
-          loadEvents(); 
-        } else {
-          setError('Failed to load events after multiple attempts. Please try again later.');
-          // showNotification('Failed to load events after multiple attempts. Please try again later.', 'error');
+      setLoading(true);
+      setError(null);
+
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        try {
+          const data = tag === 'all' ? await fetchEvents() : await fetchEventsByTag(tag);
+          setEvents(Array.isArray(data) ? data : []);
+          setLoading(false);
+          return;
+        } catch (loadError) {
+          if (attempt === 2) {
+            setError('Failed to load events after multiple attempts. Please try again later.');
+            setLoading(false);
+          }
         }
-      } finally {
-        setLoading(false);
       }
     };
 
     loadEvents();
-  }, [tag, showNotification]);
+  }, [tag]);
 
   useEffect(() => {
     setFilteredEvents(
       events.filter(event =>
-        event.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+        event.title?.toLocaleLowerCase().includes(searchQuery.trim().toLocaleLowerCase())
       )
     );
   }, [searchQuery, events]);
@@ -65,17 +62,27 @@ const EventCard = ({ tag, cornerColor, handleCardClick, searchQuery }) => {
       ) : (
         <div className="event-cards">
           {filteredEvents.map((event, index) => (
-            <div
-              key={index}
+            <article
+              key={event.id || `${event.title}-${event.date}-${index}`}
               className="event-card"
               style={{ '--corner-color': getColorFromGradient(cornerColor) }}
               onClick={() => handleCardClick(event)}
+              onKeyDown={(keyboardEvent) => {
+                if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+                  keyboardEvent.preventDefault();
+                  handleCardClick(event);
+                }
+              }}
+              role="button"
+              tabIndex="0"
             >
-              <img className='event-img' src={event.img} alt={event.title} />
+              <img className="event-img" src={event.img || "/event-placeholder.jpg"} alt="" onError={(imageEvent) => {imageEvent.currentTarget.onerror = null; imageEvent.currentTarget.src = "/event-placeholder.jpg";}}/>
               <div className="corner-tag" style={{ background: cornerColor }}></div>
               <h2>{event.title}</h2>
-              <p className="event-date">{event.date}</p>
-            </div>
+              <time className="event-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>
+                {formatEventDate(event)}
+              </time>
+            </article>
           ))}
         </div>
       )}

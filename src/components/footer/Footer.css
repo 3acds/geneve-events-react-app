@@ -5,7 +5,7 @@
   padding: 40px 60px;
   color: white;
   background-color: rgb(28, 29, 42);
-  height: 19vh;
+  min-height: 12rem;
 }
 
 a {
@@ -25,7 +25,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 60px
+  margin: 0 clamp(0rem, 3vw, 3.75rem);
 }
 
 .content-padding {
@@ -45,3 +45,19 @@ a {
   padding-top:45px;
 }
 
+@media (max-width: 45rem) {
+  .footer {
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+
+  .footer-main-div {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .copyright {
+    padding-top: 0;
+    text-align: center;
+  }
+}

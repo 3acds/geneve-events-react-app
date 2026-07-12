@@ -20,7 +20,7 @@ const CategoryPage = () => {
 
   return (
     <div className="category-page-container">
-      <div className="content">
+      <main className="category-content">
         <h1 className="category-title">{displayTag}</h1>
         <div className="search-bar">
           <input
@@ -36,7 +36,7 @@ const CategoryPage = () => {
           handleCardClick={handleCardClick}
           searchQuery={searchQuery}
         />
-      </div>
+      </main>
     </div>
   );
 };

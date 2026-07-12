@@ -1,11 +1,12 @@
 .event-detail-container {
   position: relative;
-  height: 100vh;
+  min-height: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 40px 165px;
-  overflow: hidden;
+  padding: clamp(6rem, 10vw, 8rem) clamp(1rem, 5vw, 2.5rem);
+  overflow: clip;
 }
 
 .event-detail-background {
@@ -35,7 +36,9 @@
   position: relative;
   z-index: 1;
   background: rgba(0, 0, 0, 0.5);
-  padding: 40px;
+  box-sizing: border-box;
+  width: min(100%, 600px);
+  padding: clamp(1.25rem, 5vw, 2.5rem);
   color: #fff;
   max-width: 600px;
   border-radius: 8px;
@@ -43,7 +46,8 @@
 
 .event-detail-title {
   margin-bottom: 20px;
-  font-size: 3rem;
+  overflow-wrap: anywhere;
+  font-size: clamp(2rem, 8vw, 3rem);
   color: #fff;
 }
 
