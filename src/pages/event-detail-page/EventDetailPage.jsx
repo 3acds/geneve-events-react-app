@@ -5,6 +5,8 @@ import { fetchEventById, getCachedEventById } from '../../services/api/api';
 import { formatEventDate } from '../../utils/date';
 import './EventDetailPage.css';
 
+const EVENT_PLACEHOLDER_IMAGE = '/event-placeholder-art.png';
+
 const EventDetailPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -68,7 +70,11 @@ const EventDetailPage = () => {
       </button>
       <div
         className="event-detail-background"
-        style={event.img ? { backgroundImage: `url(${event.img})` } : undefined}
+        style={{
+          backgroundImage: event.img
+            ? `url("${event.img}"), url("${EVENT_PLACEHOLDER_IMAGE}")`
+            : `url("${EVENT_PLACEHOLDER_IMAGE}")`,
+        }}
       ></div>
       <div className="event-detail-info">
         <h1 className="event-detail-title">{event.title}</h1>

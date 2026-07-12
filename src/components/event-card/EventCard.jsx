@@ -9,6 +9,7 @@ import { formatEventDate } from '../../utils/date';
 import './EventCard.css'; 
 
 const EVENTS_PER_BATCH = 20;
+const EVENT_PLACEHOLDER_IMAGE = '/event-placeholder-art.png';
 
 const readListState = (key) => {
   try {
@@ -152,11 +153,14 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
               >
                 <img
                   className="event-img"
-                  src={event.img || "/event-placeholder.svg"}
+                  src={event.img || EVENT_PLACEHOLDER_IMAGE}
                   alt=""
                   loading={index < 6 ? 'eager' : 'lazy'}
                   fetchPriority={index < 3 ? 'high' : 'auto'}
-                  onError={(imageEvent) => {imageEvent.currentTarget.onerror = null; imageEvent.currentTarget.src = "/event-placeholder.svg";}}
+                  onError={(imageEvent) => {
+                    imageEvent.currentTarget.onerror = null;
+                    imageEvent.currentTarget.src = EVENT_PLACEHOLDER_IMAGE;
+                  }}
                 />
                 <div className="corner-tag" style={{ background: cornerColor }}></div>
                 <h2>{event.title}</h2>
