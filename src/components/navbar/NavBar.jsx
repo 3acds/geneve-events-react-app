@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import DropdownMenu from '../authentication/dropdown/DropdownMenu';
-import LanguageSwitcher from './LanguageSwitcher';
+import BrandHomeLink from './BrandHomeLink';
 import categories from '../../pages/home-page/data/static-data.json';
 import './Navbar.css';
 
@@ -67,16 +67,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link className="navbar-brand" to="/" aria-label={t('nav.brandHomeAria')}>
-        <img
-          className="navbar-brand-flag"
-          src="/geneva-flag.svg"
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-        />
-        <span className="navbar-brand-text">GEE</span>
-      </Link>
+      <BrandHomeLink />
 
       <div className="site-navigation" ref={categoryMenuRef}>
         <button
@@ -130,7 +121,6 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-actions">
-        <LanguageSwitcher />
         <DropdownMenu />
       </div>
     </nav>

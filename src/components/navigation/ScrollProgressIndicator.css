@@ -5,12 +5,8 @@
   right: calc(clamp(0.35rem, 1vw, 0.75rem) + env(safe-area-inset-right, 0px));
   display: grid;
   justify-items: end;
-  gap: 0.35rem;
-  padding: 0.45rem 0.3rem;
-  background: #121f31;
-  border: 1px solid rgba(255, 174, 0, 0.28);
-  border-radius: 999px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.34);
+  gap: 0.18rem;
+  padding: 0;
   transform: translateY(-50%);
 }
 
@@ -19,7 +15,7 @@
   align-items: center;
   justify-content: flex-end;
   width: 2.75rem;
-  height: 0.8rem;
+  height: 0.65rem;
   padding: 0;
   background: transparent;
   border: 0;
@@ -29,7 +25,7 @@
 .page-scroll-step-line {
   width: var(--scroll-step-width);
   height: 2px;
-  background: #718096;
+  background: rgba(181, 197, 216, 0.48);
   border-radius: 999px;
   opacity: 0.72;
   transform-origin: right center;
@@ -42,17 +38,16 @@
 
 .page-scroll-step:hover .page-scroll-step-line,
 .page-scroll-step:focus-visible .page-scroll-step-line {
-  background: #f7c948;
-  opacity: 1;
-  transform: translateX(-0.12rem) scaleX(1.05);
+  background: rgba(255, 196, 51, 0.82);
+  opacity: 0.9;
+  transform: translateX(-0.08rem) scaleX(1.03);
 }
 
 .page-scroll-step.active .page-scroll-step-line {
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, #ffec00, #ff7a00 58%, #ff1744);
-  box-shadow: 0 0 9px rgba(255, 174, 0, 0.78);
   opacity: 1;
-  transform: translateX(-0.16rem) scaleX(1.12);
+  transform: translateX(-0.1rem) scaleX(1.06);
 }
 
 .page-scroll-step:focus-visible {
@@ -63,9 +58,8 @@
 
 @media (max-width: 35rem) {
   .page-scroll-indicator {
-    right: calc(0.12rem + env(safe-area-inset-right, 0px));
-    gap: 0.28rem;
-    padding: 0.35rem 0.18rem;
+    right: calc(0.25rem + env(safe-area-inset-right, 0px));
+    gap: 0.14rem;
   }
 
   .page-scroll-step {

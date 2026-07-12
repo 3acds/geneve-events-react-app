@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; 
 import { useLanguage } from '../../context/LanguageContext';
+import LanguageSwitcher from '../navbar/LanguageSwitcher';
 import categories from '../../pages/home-page/data/static-data.json';
 import './Footer.css';
 
@@ -62,8 +63,12 @@ const Footer = () => {
             <a href="https://bsilva.ch/" target="_blank" rel="noreferrer">{t('footer.portfolio')}</a>
           </nav>
         </div>
-        <div className='copyright'>
-          <p>{t('footer.copyright')}</p>
+        <div className="footer-bottom">
+          <p className="copyright">{t('footer.copyright')}</p>
+          <div className="footer-language-control">
+            <span className="footer-language-label">{t('language.selector')}</span>
+            <LanguageSwitcher />
+          </div>
         </div>
       </footer>
     </>
