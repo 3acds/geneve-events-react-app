@@ -8,6 +8,7 @@ import EventDetailPage from './pages/event-detail-page/EventDetailPage';
 import ProfilePage from './pages/profile-page/ProfilePage';
 import AboutPage from './pages/about-page/AboutPage';
 import Footer from './components/footer/Footer';
+import ScrollToTop from './components/navigation/ScrollToTop';
 // Context imports
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -21,6 +22,7 @@ function App() {
     <AuthProvider>
       <NotificationProvider>
         <Router>
+          <ScrollToTop />
           <div className="App">
             <ErrorBoundary>
               <Navbar />
@@ -44,5 +46,4 @@ function App() {
 }
 
 export default App;
-
 

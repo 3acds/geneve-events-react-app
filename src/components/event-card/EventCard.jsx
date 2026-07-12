@@ -1,12 +1,13 @@
 // React imports
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 // Component imports
 import { fetchEventsByTag, fetchEvents } from '../../services/api/api';
 import { formatEventDate } from '../../utils/date';
 // CSS imports
 import './EventCard.css'; 
 
-const EventCard = ({ tag, cornerColor, handleCardClick, searchQuery }) => {
+const EventCard = ({ tag, cornerColor, searchQuery }) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,27 +63,27 @@ const EventCard = ({ tag, cornerColor, handleCardClick, searchQuery }) => {
       ) : (
         <div className="event-cards">
           {filteredEvents.map((event, index) => (
-            <article
+            <Link
               key={event.id || `${event.title}-${event.date}-${index}`}
               className="event-card"
+              to={`/event/${encodeURIComponent(event.id)}`}
+              state={{ event }}
               style={{ '--corner-color': getColorFromGradient(cornerColor) }}
-              onClick={() => handleCardClick(event)}
-              onKeyDown={(keyboardEvent) => {
-                if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
-                  keyboardEvent.preventDefault();
-                  handleCardClick(event);
-                }
-              }}
-              role="button"
-              tabIndex="0"
             >
-              <img className="event-img" src={event.img || "/event-placeholder.svg"} alt="" onError={(imageEvent) => {imageEvent.currentTarget.onerror = null; imageEvent.currentTarget.src = "/event-placeholder.svg";}}/>
+              <img
+                className="event-img"
+                src={event.img || "/event-placeholder.svg"}
+                alt=""
+                loading={index < 6 ? 'eager' : 'lazy'}
+                fetchPriority={index < 3 ? 'high' : 'auto'}
+                onError={(imageEvent) => {imageEvent.currentTarget.onerror = null; imageEvent.currentTarget.src = "/event-placeholder.svg";}}
+              />
               <div className="corner-tag" style={{ background: cornerColor }}></div>
               <h2>{event.title}</h2>
               <time className="event-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>
                 {formatEventDate(event)}
               </time>
-            </article>
+            </Link>
           ))}
         </div>
       )}
