@@ -92,23 +92,28 @@
   transform: rotate(180deg);
 }
 
+.category-navigation-overlay {
+  position: fixed;
+  inset: var(--navbar-height) 0 0;
+  z-index: 999;
+  background: rgba(5, 12, 22, 0.7);
+  backdrop-filter: blur(9px);
+  animation: category-overlay-in 0.18s ease-out;
+}
+
 .category-navigation-menu {
   position: absolute;
-  top: calc(100% + 0.75rem);
+  top: 0.75rem;
   left: 50%;
-  z-index: 1100;
   width: min(36rem, calc(100vw - 2rem));
   padding: 1rem;
   color: #fff;
-  background: rgba(18, 31, 49, 0.98);
+  background: #121f31;
   border: 1px solid rgba(255, 174, 0, 0.4);
   border-radius: 12px;
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(14px);
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, -0.5rem);
-  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  transform: translateX(-50%);
+  animation: category-menu-in 0.2s ease-out;
 }
 
 .category-navigation-menu::before {
@@ -120,10 +125,20 @@
   border-radius: 12px 12px 0 0;
 }
 
-.category-navigation-menu.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
+@keyframes category-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes category-menu-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 .category-navigation-heading {
@@ -220,19 +235,27 @@
     font-size: 0.85rem;
   }
 
-  .category-navigation-menu {
-    position: fixed;
-    top: calc(var(--navbar-height) + 0.5rem);
-    right: 1rem;
-    left: 1rem;
-    width: auto;
-    max-height: calc(100svh - var(--navbar-height) - 1.5rem);
-    overflow-y: auto;
-    transform: translateY(-0.5rem);
+  .category-navigation-overlay {
+    background: #121f31;
+    backdrop-filter: none;
   }
 
-  .category-navigation-menu.show {
-    transform: translateY(0);
+  .category-navigation-menu {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    padding: 1.25rem 1rem 2rem;
+    overflow-y: auto;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255, 236, 0, 0.08), transparent 28%),
+      radial-gradient(circle at 85% 90%, rgba(255, 23, 68, 0.1), transparent 30%),
+      #121f31;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+    animation: category-mobile-menu-in 0.2s ease-out;
   }
 
   .category-navigation-grid {
@@ -241,6 +264,17 @@
 
   .category-navigation-link.home-link {
     grid-column: auto;
+  }
+}
+
+@keyframes category-mobile-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
