@@ -198,17 +198,13 @@
 
 @media (max-width: 35rem) {
   .navbar {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 0.45rem;
     padding-inline: 1rem;
   }
 
   .site-navigation {
-    position: relative;
-    left: auto;
-    justify-self: center;
-    transform: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .navbar .dropdown-menu button {

@@ -2,8 +2,8 @@
   width: min(100%, 90rem);
   min-height: 100%;
   box-sizing: border-box;
-  margin: 0 auto;
-  padding: clamp(5rem, 9vw, 7rem) clamp(1rem, 4vw, 4rem) clamp(4rem, 8vw, 8rem);
+  margin: var(--navbar-height) auto 0;
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 4vw, 4rem) clamp(4rem, 8vw, 8rem);
 }
 
 .home-title {
@@ -124,5 +124,20 @@
 
   .category-card {
     max-width: 13rem;
+  }
+}
+
+@media (min-width: 90rem) {
+  .category-cards {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: min(100%, 82rem);
+  }
+
+  .category-card {
+    max-width: 15rem;
+  }
+
+  .category-card h2 {
+    font-size: 1.25rem;
   }
 }
