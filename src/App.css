@@ -6,6 +6,7 @@
 }
 
 :root {
+  --navbar-height: 3.75rem;
   background: linear-gradient(to right, #141E30     , #243B55 );
   color-scheme: dark;
 }

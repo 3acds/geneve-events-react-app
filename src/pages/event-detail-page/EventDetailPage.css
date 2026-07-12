@@ -1,23 +1,25 @@
 .event-detail-container {
   position: relative;
-  min-height: 100%;
+  isolation: isolate;
+  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100svh - var(--navbar-height));
+  margin-top: var(--navbar-height);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(6rem, 10vw, 8rem) clamp(1rem, 5vw, 2.5rem);
-  overflow: clip;
+  padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 5vw, 2.5rem);
+  overflow: hidden;
 }
 
 .event-detail-background {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: -12px;
   background-size: cover;
-  background-position: center;  
+  background-position: center;
+  background-color: #17283e;
   filter: blur(8px);
+  transform: scale(1.02);
   z-index: -2;
 }
 
@@ -41,6 +43,8 @@
   padding: clamp(1.25rem, 5vw, 2.5rem);
   color: #fff;
   max-width: 600px;
+  max-height: calc(100svh - var(--navbar-height) - 3rem);
+  overflow-y: auto;
   border-radius: 8px;
 }
 

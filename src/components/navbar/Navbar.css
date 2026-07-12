@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  min-height: 3.75rem;
+  min-height: var(--navbar-height);
   padding: 10px 30px;
   background: linear-gradient(to right, #FAFF00, #ff0000);
   color: black;
