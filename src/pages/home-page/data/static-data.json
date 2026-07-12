@@ -49,7 +49,7 @@
       "cornerColor": "linear-gradient(to right, #FCFB62, #91F9E5)"
     },
     {
-      "img": "https://www.bosshunting.com.au/wp-content/uploads/2021/01/Monet-and-Friends_Cezanne_01_supplied-1200x675.jpg",
+      "img": "/category-images/gallery.webp",
       "displayTag": "Exposition",
       "apiTag": "Exhibition",
       "cornerColor": "linear-gradient(to right, #00C1D0, #0A0F44)"
@@ -67,7 +67,7 @@
       "cornerColor": "linear-gradient(to right, #23CD6B, #272D2D)"
     },
     {
-      "img": "https://images.seattleschild.com/wp-content/uploads/2020/05/readinparkSTOCK.jpg",
+      "img": "/category-images/reading.webp",
       "displayTag": "Lecture",
       "apiTag": "Reading",
       "cornerColor": "linear-gradient(to right, #DB2763, #B0DB43)"
@@ -80,5 +80,4 @@
     }
   ]
 }
-
 
