@@ -1,22 +1,19 @@
 // React imports
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // Firebase imports
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../../services/database/firebase';
-import { getDatabase, ref, get, set, update } from 'firebase/database';
+import { getDatabase, ref, get, set } from 'firebase/database';
 // Component imports
 import AuthModal from '../auth-modal/AuthModal';
+import GoogleIcon from '../GoogleIcon';
 // Coontext imports
 import { useNotification } from '../../../context/NotificationContext';
 
-const LoginBtn = ({ onLogin, onAuthInitiate }) => {
+const LoginBtn = ({ onLogin, onAuthInitiate = () => {}, onAuthEnd = () => {} }) => {
   const [modalData, setModalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
-
-  useEffect(() => {
-    // console.log('Modal data updated:', modalData);
-  }, [modalData]);
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -62,14 +59,16 @@ const LoginBtn = ({ onLogin, onAuthInitiate }) => {
             // console.log('User canceled registration');
             closeModal();
           },
-          confirmText: 'Register',
-          cancelText: 'Cancel'
+          confirmText: "S'inscrire",
+          cancelText: 'Annuler'
         });
         // console.log('Modal data set:', modalData); 
       }
     } catch (error) {
-      // console.error('Error during sign-in with Google:', error);
-      showNotification('Authentification a échoué. Veuillez réessayer.', 'error');
+      if (error?.code !== 'auth/popup-closed-by-user') {
+        showNotification("L'authentification Google a échoué. Veuillez réessayer.", 'error');
+      }
+      onAuthEnd();
     } finally {
       setIsLoading(false);
     }
@@ -77,11 +76,15 @@ const LoginBtn = ({ onLogin, onAuthInitiate }) => {
 
   const closeModal = () => {
     setModalData(null);
+    onAuthEnd();
   };
 
   return (
     <>
-      <button onClick={handleGoogleSignIn} disabled={isLoading}>Login</button>
+      <button className="google-auth-button" onClick={handleGoogleSignIn} disabled={isLoading}>
+        <GoogleIcon />
+        <span>{isLoading ? 'Connexion…' : 'Se connecter avec Google'}</span>
+      </button>
       {modalData && (
         <AuthModal
           message={modalData.message}

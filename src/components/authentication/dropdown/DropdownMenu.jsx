@@ -49,6 +49,11 @@ const DropdownMenu = () => {
     setIsPersisting(true);
   };
 
+  const handleAuthEnd = () => {
+    setIsOpen(false);
+    setIsPersisting(false);
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
@@ -104,12 +109,12 @@ const DropdownMenu = () => {
               login(user);
               setIsOpen(false);
               setIsPersisting(false); 
-            }} onAuthInitiate={handleAuthInitiate} />
+            }} onAuthInitiate={handleAuthInitiate} onAuthEnd={handleAuthEnd} />
             <SignUpBtn onRegister={(user) => {
               login(user);
               setIsOpen(false);
               setIsPersisting(false); 
-            }} onAuthInitiate={handleAuthInitiate} />
+            }} onAuthInitiate={handleAuthInitiate} onAuthEnd={handleAuthEnd} />
           </>
         )}
       </div>

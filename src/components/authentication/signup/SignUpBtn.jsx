@@ -8,8 +8,9 @@ import { auth, googleProvider } from '../../../services/database/firebase';
 import { useNotification } from '../../../context/NotificationContext';
 // Component imports
 import AuthModal from '../auth-modal/AuthModal';
+import GoogleIcon from '../GoogleIcon';
 
-const SignUpBtn = ({ onRegister, onAuthInitiate }) => {
+const SignUpBtn = ({ onRegister, onAuthInitiate = () => {}, onAuthEnd = () => {} }) => {
   const [modalData, setModalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
@@ -45,8 +46,8 @@ const SignUpBtn = ({ onRegister, onAuthInitiate }) => {
             // console.log('User canceled login');
             closeModal();
           },
-          confirmText: 'Log In',
-          cancelText: 'Cancel'
+          confirmText: 'Se connecter',
+          cancelText: 'Annuler'
         });
       } else {
         // console.log('User does not exist, creating account');
@@ -63,8 +64,10 @@ const SignUpBtn = ({ onRegister, onAuthInitiate }) => {
         showNotification('Votre compte a été créé avec succès! Merci de vous être inscrit chez nous', 'success');
       }
     } catch (error) {
-      // console.error('Google sign-up error:', error);
-      showNotification("Erreur d'inscription avec Google. Veuillez réessayer.", 'error');
+      if (error?.code !== 'auth/popup-closed-by-user') {
+        showNotification("L'inscription avec Google a échoué. Veuillez réessayer.", 'error');
+      }
+      onAuthEnd();
     } finally {
       setIsLoading(false);
     }
@@ -72,11 +75,15 @@ const SignUpBtn = ({ onRegister, onAuthInitiate }) => {
 
   const closeModal = () => {
     setModalData(null);
+    onAuthEnd();
   };
 
   return (
     <>
-      <button onClick={handleGoogleSignUp} disabled={isLoading}>S'inscrire</button>
+      <button className="google-auth-button" onClick={handleGoogleSignUp} disabled={isLoading}>
+        <GoogleIcon />
+        <span>{isLoading ? 'Inscription…' : "S'inscrire avec Google"}</span>
+      </button>
       {modalData && (
         <AuthModal
           message={modalData.message}
