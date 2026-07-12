@@ -1,6 +1,6 @@
 // React imports
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 // Component imports
 import { fetchEventsByTag, fetchEvents } from '../../services/api/api';
 import { formatEventDate } from '../../utils/date';
@@ -9,12 +9,25 @@ import './EventCard.css';
 
 const EVENTS_PER_BATCH = 20;
 
+const readListState = (key) => {
+  try {
+    return JSON.parse(sessionStorage.getItem(key)) || {};
+  } catch {
+    return {};
+  }
+};
+
 const EventCard = ({ tag, cornerColor, searchQuery }) => {
+  const location = useLocation();
+  const listStateKey = `gee:event-list:${location.pathname}`;
+  const restoredScroll = useRef(false);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(EVENTS_PER_BATCH);
+  const [visibleCount, setVisibleCount] = useState(
+    () => Math.max(EVENTS_PER_BATCH, readListState(listStateKey).visibleCount || 0),
+  );
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -48,8 +61,50 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
   }, [searchQuery, events]);
 
   useEffect(() => {
-    setVisibleCount(EVENTS_PER_BATCH);
-  }, [tag, searchQuery]);
+    const savedState = searchQuery ? {} : readListState(listStateKey);
+    setVisibleCount(Math.max(EVENTS_PER_BATCH, savedState.visibleCount || 0));
+    restoredScroll.current = false;
+  }, [tag, searchQuery, listStateKey]);
+
+  useEffect(() => {
+    if (loading || error || searchQuery || restoredScroll.current) return undefined;
+    if (events.length > 0 && filteredEvents.length === 0) return undefined;
+
+    const savedState = readListState(listStateKey);
+    if (!savedState.scrollY) {
+      restoredScroll.current = true;
+      return undefined;
+    }
+    if (visibleCount < (savedState.visibleCount || EVENTS_PER_BATCH)) return undefined;
+
+    restoredScroll.current = true;
+    let secondFrame;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => window.scrollTo(0, savedState.scrollY));
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame) cancelAnimationFrame(secondFrame);
+    };
+  }, [error, events.length, filteredEvents.length, listStateKey, loading, searchQuery, visibleCount]);
+
+  const rememberListPosition = () => {
+    sessionStorage.setItem(listStateKey, JSON.stringify({
+      scrollY: window.scrollY,
+      visibleCount,
+    }));
+  };
+
+  const showMoreEvents = () => {
+    setVisibleCount((count) => {
+      const nextCount = count + EVENTS_PER_BATCH;
+      sessionStorage.setItem(listStateKey, JSON.stringify({
+        ...readListState(listStateKey),
+        visibleCount: nextCount,
+      }));
+      return nextCount;
+    });
+  };
 
   if (loading) {
     return <div className="loading-spinner"></div>;
@@ -78,7 +133,8 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
                 key={event.id || `${event.title}-${event.date}-${index}`}
                 className="event-card"
                 to={`/event/${encodeURIComponent(event.id)}`}
-                state={{ event }}
+                state={{ event, from: location.pathname }}
+                onClick={rememberListPosition}
                 style={{ '--corner-color': getColorFromGradient(cornerColor) }}
               >
                 <img
@@ -101,7 +157,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
             <button
               className="load-more-events"
               type="button"
-              onClick={() => setVisibleCount((count) => count + EVENTS_PER_BATCH)}
+              onClick={showMoreEvents}
             >
               Afficher plus
               <span>{Math.min(EVENTS_PER_BATCH, filteredEvents.length - visibleCount)} événements</span>

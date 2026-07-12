@@ -45,6 +45,21 @@ const Footer = () => {
             </div>   
           </div>
         </div>
+        <div className="footer-mobile">
+          <Link className="footer-mobile-brand" to="/">GEE</Link>
+          <nav className="footer-mobile-links" aria-label="Navigation de pied de page">
+            <Link to="/">Accueil</Link>
+            <Link
+              to="/category/all"
+              state={{ displayTag: 'Tous les évènements', cornerColor: 'linear-gradient(to right, #91F1EF, #FFD5E0)' }}
+            >
+              Événements
+            </Link>
+            <Link to="/about">À propos</Link>
+            {user && <Link to="/profile">Profil</Link>}
+            <a href="https://bsilva.ch/" target="_blank" rel="noreferrer">Portfolio</a>
+          </nav>
+        </div>
         <div className='copyright'>
           <p>© Copyright by B.Silva. All rights reserved.</p>
         </div>
