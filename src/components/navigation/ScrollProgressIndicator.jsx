@@ -112,11 +112,7 @@ const ScrollProgressIndicator = () => {
             aria-current={isActive ? 'step' : undefined}
             onClick={() => scrollToStep(stepIndex)}
           >
-            <span
-              className="page-scroll-step-line"
-              style={{ '--scroll-step-width': `${1.15 + (stepIndex * 0.34)}rem` }}
-              aria-hidden="true"
-            ></span>
+            <span className="page-scroll-step-line" aria-hidden="true"></span>
           </button>
         );
       })}

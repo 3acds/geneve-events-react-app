@@ -23,31 +23,27 @@
 }
 
 .page-scroll-step-line {
-  width: var(--scroll-step-width);
+  width: 1.49rem;
   height: 2px;
   background: rgba(181, 197, 216, 0.48);
   border-radius: 999px;
   opacity: 0.72;
-  transform-origin: right center;
   transition:
     background 0.2s ease,
     box-shadow 0.2s ease,
-    opacity 0.2s ease,
-    transform 0.2s ease;
+    opacity 0.2s ease;
 }
 
 .page-scroll-step:hover .page-scroll-step-line,
 .page-scroll-step:focus-visible .page-scroll-step-line {
   background: rgba(255, 196, 51, 0.82);
   opacity: 0.9;
-  transform: translateX(-0.08rem) scaleX(1.03);
 }
 
 .page-scroll-step.active .page-scroll-step-line {
   height: 2px;
   background: linear-gradient(90deg, #ffec00, #ff7a00 58%, #ff1744);
   opacity: 1;
-  transform: translateX(-0.1rem) scaleX(1.06);
 }
 
 .page-scroll-step:focus-visible {
