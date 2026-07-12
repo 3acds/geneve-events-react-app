@@ -8,6 +8,7 @@ import EventDetailPage from './pages/event-detail-page/EventDetailPage';
 import ProfilePage from './pages/profile-page/ProfilePage';
 import AboutPage from './pages/about-page/AboutPage';
 import Footer from './components/footer/Footer';
+import ScrollProgressIndicator from './components/navigation/ScrollProgressIndicator';
 import ScrollToTop from './components/navigation/ScrollToTop';
 // Context imports
 import { AuthProvider } from './context/AuthContext';
@@ -29,6 +30,7 @@ const AppContent = () => {
           <div className="App">
             <ErrorBoundary fallbackMessage={t('errors.unexpected')}>
               <Navbar />
+              <ScrollProgressIndicator />
               <div className="content">
                 <Routes>
                   <Route path="/" element={<HomePage />} />
