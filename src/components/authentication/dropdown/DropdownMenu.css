@@ -20,6 +20,33 @@
   margin-right: 8px;
 }
 
+.account-toggle {
+  align-items: center;
+}
+
+.account-guest-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.account-toggle-chevron {
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.account-label {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -118,5 +145,19 @@
 @media (max-width: 35rem) {
   .dropdown-content {
     min-width: min(260px, calc(100vw - 2rem));
+  }
+
+  .navbar .dropdown-menu > .account-toggle {
+    justify-content: center;
+    min-width: 2.75rem;
+    padding-inline: 0.4rem;
+  }
+
+  .account-label {
+    display: none;
+  }
+
+  .account-toggle-chevron {
+    margin-left: 0.15rem;
   }
 }

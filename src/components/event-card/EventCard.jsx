@@ -1,6 +1,7 @@
 // React imports
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 // Component imports
 import { fetchEventsByTag, fetchEvents, getCachedEvents } from '../../services/api/api';
 import { formatEventDate } from '../../utils/date';
@@ -19,11 +20,12 @@ const readListState = (key) => {
 
 const EventCard = ({ tag, cornerColor, searchQuery }) => {
   const location = useLocation();
+  const { locale, t } = useLanguage();
   const listStateKey = `gee:event-list:${location.pathname}`;
   const restoredScroll = useRef(false);
   const [events, setEvents] = useState(() => getCachedEvents(tag) || []);
   const [loading, setLoading] = useState(() => getCachedEvents(tag) === null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [visibleCount, setVisibleCount] = useState(
     () => Math.max(EVENTS_PER_BATCH, readListState(listStateKey).visibleCount || 0),
   );
@@ -39,7 +41,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
       setEvents([]);
       setLoading(true);
     }
-    setError(null);
+    setError(false);
 
     const loadEvents = async () => {
       for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -52,7 +54,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
         } catch (loadError) {
           if (!active) return;
           if (attempt === 2) {
-            setError('Failed to load events after multiple attempts. Please try again later.');
+            setError(true);
             setLoading(false);
           } else {
             await new Promise((resolve) => setTimeout(resolve, 300 * (attempt + 1)));
@@ -67,9 +69,9 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
 
   const filteredEvents = useMemo(() => (
     events.filter(event =>
-      event.title?.toLocaleLowerCase().includes(searchQuery.trim().toLocaleLowerCase())
+      event.title?.toLocaleLowerCase(locale).includes(searchQuery.trim().toLocaleLowerCase(locale))
     )
-  ), [searchQuery, events]);
+  ), [events, locale, searchQuery]);
 
   useEffect(() => {
     const savedState = searchQuery ? {} : readListState(listStateKey);
@@ -118,13 +120,13 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
   };
 
   if (loading) {
-    return <div className="loading-spinner"></div>;
+    return <div className="loading-spinner" role="status" aria-label={t('events.loading')}></div>;
   }
 
   if (error) {
     return (
       <div className="error-message">
-        {error}
+        {t('events.loadError')}
       </div>
     );
   }
@@ -132,11 +134,11 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
   return (
     <>
       {filteredEvents.length === 0 ? (
-        <p className="no-events-message">Il n'y a actuellement aucun événement disponible dans cette catégorie. Veuillez réessayer plus tard.</p>
+        <p className="no-events-message">{t('events.emptyCategory')}</p>
       ) : (
         <div className="event-listing">
           <p className="event-results-count">
-            {filteredEvents.length} événement{filteredEvents.length > 1 ? 's' : ''}
+            {t('events.resultCount', { count: filteredEvents.length })}
           </p>
           <div className="event-cards">
             {filteredEvents.slice(0, visibleCount).map((event, index) => (
@@ -159,7 +161,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
                 <div className="corner-tag" style={{ background: cornerColor }}></div>
                 <h2>{event.title}</h2>
                 <time className="event-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>
-                  {formatEventDate(event)}
+                  {formatEventDate(event, locale)}
                 </time>
               </Link>
             ))}
@@ -170,8 +172,12 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
               type="button"
               onClick={showMoreEvents}
             >
-              Afficher plus
-              <span>{Math.min(EVENTS_PER_BATCH, filteredEvents.length - visibleCount)} événements</span>
+              {t('events.loadMore')}
+              <span>
+                {t('events.remainingCount', {
+                  count: Math.min(EVENTS_PER_BATCH, filteredEvents.length - visibleCount),
+                })}
+              </span>
             </button>
           )}
         </div>

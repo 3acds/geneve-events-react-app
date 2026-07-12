@@ -6,6 +6,7 @@ import { getDatabase, ref, get, set } from 'firebase/database';
 import { auth, googleProvider } from '../../../services/database/firebase';
 // Context imports
 import { useNotification } from '../../../context/NotificationContext';
+import { useLanguage } from '../../../context/LanguageContext';
 // Component imports
 import AuthModal from '../auth-modal/AuthModal';
 import GoogleIcon from '../GoogleIcon';
@@ -14,6 +15,7 @@ const SignUpBtn = ({ onRegister, onAuthInitiate = () => {}, onAuthEnd = () => {}
   const [modalData, setModalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
+  const { t } = useLanguage();
 
   const handleGoogleSignUp = async () => {
     setIsLoading(true);
@@ -30,7 +32,7 @@ const SignUpBtn = ({ onRegister, onAuthInitiate = () => {}, onAuthEnd = () => {}
         const userData = userSnapshot.val();
         // console.log('User already exists, showing modal');
         setModalData({
-          message: 'Le compte existe déjà. Voulez-vous vous connecter?',
+          message: t('auth.signup.accountExistsPrompt'),
           onConfirm: () => {
             const updatedUser = {
               ...user,
@@ -39,15 +41,15 @@ const SignUpBtn = ({ onRegister, onAuthInitiate = () => {}, onAuthEnd = () => {}
             };
             // console.log('Logging in existing user:', updatedUser);
             onRegister(updatedUser);
-            showNotification('Connecté avec succès', 'success');
+            showNotification(t('notifications.signedIn'), 'success');
             closeModal();
           },
           onCancel: () => {
             // console.log('User canceled login');
             closeModal();
           },
-          confirmText: 'Se connecter',
-          cancelText: 'Annuler'
+          confirmText: t('auth.action.signIn'),
+          cancelText: t('common.cancel')
         });
       } else {
         // console.log('User does not exist, creating account');
@@ -61,11 +63,11 @@ const SignUpBtn = ({ onRegister, onAuthInitiate = () => {}, onAuthEnd = () => {}
           accountType: 'google'
         });
         onRegister(user);
-        showNotification('Votre compte a été créé avec succès! Merci de vous être inscrit chez nous', 'success');
+        showNotification(t('notifications.accountCreated'), 'success');
       }
     } catch (error) {
       if (error?.code !== 'auth/popup-closed-by-user') {
-        showNotification("L'inscription avec Google a échoué. Veuillez réessayer.", 'error');
+        showNotification(t('notifications.googleSignUpFailed'), 'error');
       }
       onAuthEnd();
     } finally {
@@ -80,9 +82,9 @@ const SignUpBtn = ({ onRegister, onAuthInitiate = () => {}, onAuthEnd = () => {}
 
   return (
     <>
-      <button className="google-auth-button" onClick={handleGoogleSignUp} disabled={isLoading}>
+      <button className="google-auth-button" type="button" onClick={handleGoogleSignUp} disabled={isLoading}>
         <GoogleIcon />
-        <span>{isLoading ? 'Inscription…' : "S'inscrire avec Google"}</span>
+        <span>{isLoading ? t('auth.signup.loading') : t('auth.signup.withGoogle')}</span>
       </button>
       {modalData && (
         <AuthModal

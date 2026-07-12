@@ -1,6 +1,7 @@
 // React imports
 import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 // Component imports
 import EventCard from '../../components/event-card/EventCard';
 import data from '../home-page/data/static-data.json';
@@ -10,8 +11,9 @@ import './CategoryPage.css';
 const CategoryPage = () => {
   const { tag } = useParams();
   const location = useLocation();
+  const { getCategoryLabel, t } = useLanguage();
   const category = data.categories.find(({ apiTag }) => apiTag === tag);
-  const displayTag = location.state?.displayTag || category?.displayTag || tag;
+  const displayTag = getCategoryLabel(tag, category?.displayTag || tag);
   const cornerColor = location.state?.cornerColor
     || category?.cornerColor
     || 'linear-gradient(to right, #FFEC00, #FF0000)';
@@ -24,7 +26,8 @@ const CategoryPage = () => {
         <div className="search-bar">
           <input
             type="text"
-            placeholder="Search events"
+            placeholder={t('events.searchPlaceholder')}
+            aria-label={t('events.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

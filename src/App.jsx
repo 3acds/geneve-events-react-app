@@ -11,20 +11,23 @@ import Footer from './components/footer/Footer';
 import ScrollToTop from './components/navigation/ScrollToTop';
 // Context imports
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { NotificationProvider } from './context/NotificationContext';
 // Error handler imports
 import ErrorBoundary from './components/error-handle/ErrorBoundary';
 // CSS imports
 import './App.css';
 
-function App() {
+const AppContent = () => {
+  const { t } = useLanguage();
+
   return (
     <AuthProvider>
       <NotificationProvider>
         <Router>
           <ScrollToTop />
           <div className="App">
-            <ErrorBoundary>
+            <ErrorBoundary fallbackMessage={t('errors.unexpected')}>
               <Navbar />
               <div className="content">
                 <Routes>
@@ -43,7 +46,14 @@ function App() {
 
     </AuthProvider>
   );
+};
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
+  );
 }
 
 export default App;
-

@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
+import { useLanguage } from '../../../context/LanguageContext';
 import GoogleIcon from '../GoogleIcon';
 import './AuthModal.css';
 
 const AuthModal = ({ message, onConfirm, onCancel, confirmText, cancelText }) => {
+  const { t } = useLanguage();
+
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') onCancel();
@@ -16,7 +19,7 @@ const AuthModal = ({ message, onConfirm, onCancel, confirmText, cancelText }) =>
       <div className="auth-modal-overlay" onClick={onCancel}></div>
       <div className="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-message">
         <div className="auth-modal-content">
-          <div className="auth-modal-provider"><GoogleIcon /> Authentification Google</div>
+          <div className="auth-modal-provider"><GoogleIcon /> {t('auth.googleProvider')}</div>
           <p id="auth-modal-message">{message}</p>
           <div className="auth-modal-buttons">
             <button onClick={onConfirm}>{confirmText}</button>

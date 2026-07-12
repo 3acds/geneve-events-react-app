@@ -1,7 +1,8 @@
 // React imports
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // Context imports
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useNotification } from '../../context/NotificationContext';
 // Firebase imports
 import { getDatabase, ref, update } from 'firebase/database';
@@ -13,11 +14,21 @@ import './ProfilePage.css';
 const ProfilePage = () => {
   const { user, setUser } = useAuth();
   const { showNotification } = useNotification();
+  const { t } = useLanguage();
+  const loginNotificationShown = useRef(false);
   const [displayName, setDisplayName] = useState(user ? user.displayName : '');
   const [photoURL, setPhotoURL] = useState(user ? user.photoURL : '');
   const [isEditing, setIsEditing] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
+
+  useEffect(() => {
+    if (!user && !loginNotificationShown.current) {
+      loginNotificationShown.current = true;
+      showNotification(t('profile.loginRequired'), 'error');
+    } else if (user) {
+      loginNotificationShown.current = false;
+    }
+  }, [showNotification, t, user]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -31,17 +42,16 @@ const ProfilePage = () => {
         setPhotoURL(reader.result);
       };
       reader.readAsDataURL(file);
-      setSelectedFile(file);
     }
   };
 
   const handleSaveClick = () => {
     setModalData({
-      message: 'Êtes-vous sûr de vouloir enregistrer les modifications ?',
+      message: t('profile.confirmSave'),
       onConfirm: updateProfile,
       onCancel: closeModal,
-      confirmText: 'Sauvegarder',
-      cancelText: 'Annuler',
+      confirmText: t('profile.save'),
+      cancelText: t('common.cancel'),
     });
   };
 
@@ -59,27 +69,26 @@ const ProfilePage = () => {
       });
       const updatedUser = { ...user, displayName, photoURL };
       setUser(updatedUser);
-      showNotification('Mise à jour du profil réussie', 'success');
+      showNotification(t('notifications.profileUpdated'), 'success');
       setIsEditing(false);
       closeModal();
     } catch (error) {
       // console.error('Failed to update profile:', error);
-      showNotification('Échec de la mise à jour du profil. Veuillez réessayer plus tard', 'error');
+      showNotification(t('notifications.profileUpdateFailed'), 'error');
     }
   };
 
   if (!user) {
-    showNotification('Veuillez vous connecter pour voir votre profil.', 'error');
-    return <div>Veuillez vous connecter pour voir votre profil.</div>;
+    return <div>{t('profile.loginRequired')}</div>;
   }
 
   return (
     <div className="profile-page-container">
       <div className="profile-page-content">
-        <h1>Profile</h1>
+        <h1>{t('profile.title')}</h1>
         <div className="profile-picture">
           <label htmlFor="fileInput">
-            <img src={photoURL} alt="User Avatar" className="editable-avatar" />
+            <img src={photoURL} alt={t('profile.avatarAlt')} className="editable-avatar" />
           </label>
           {isEditing && (
             <input
@@ -98,14 +107,14 @@ const ProfilePage = () => {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Nouveau nom d'affichage"
+              placeholder={t('profile.displayNamePlaceholder')}
             />
           )}
         </div>
         {isEditing ? (
-          <button onClick={handleSaveClick}>Save</button>
+          <button type="button" onClick={handleSaveClick}>{t('profile.save')}</button>
         ) : (
-          <button onClick={handleEditClick}>Edit</button>
+          <button type="button" onClick={handleEditClick}>{t('profile.edit')}</button>
         )}
         {modalData && (
           <AuthModal

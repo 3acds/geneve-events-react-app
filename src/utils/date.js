@@ -17,9 +17,14 @@ export const formatEventDate = (event, locale = 'fr-CH') => {
       : new Date(rawDate);
   } else if (rawDate instanceof Date) {
     parsedDate = rawDate;
-  } else if (rawDate && typeof rawDate === 'object' && rawDate.seconds) {
-    parsedDate = new Date(rawDate.seconds * 1000);
-  } else if (event.year && event.month && event.day) {
+  } else if (rawDate && typeof rawDate.toDate === 'function') {
+    parsedDate = rawDate.toDate();
+  } else if (rawDate && typeof rawDate === 'object') {
+    const seconds = rawDate.seconds ?? rawDate._seconds;
+    if (Number.isFinite(seconds)) parsedDate = new Date(seconds * 1000);
+  }
+
+  if (!parsedDate && event.year && event.month && event.day) {
     parsedDate = new Date(Date.UTC(event.year, event.month - 1, event.day));
   }
 

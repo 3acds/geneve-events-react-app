@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 // Context imports
 import { useAuth } from '../../../context/AuthContext';
+import { useLanguage } from '../../../context/LanguageContext';
 import { useNotification } from '../../../context/NotificationContext';
 // Component imports
 import LoginBtn from '../login/LoginBtn';
@@ -15,6 +16,7 @@ const DropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPersisting, setIsPersisting] = useState(false); 
   const { showNotification } = useNotification();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
@@ -32,7 +34,7 @@ const DropdownMenu = () => {
     if (location.pathname === '/profile') {
       navigate('/');
     }
-    showNotification('Déconnecté avec succès', 'success');
+    showNotification(t('notifications.signedOut'), 'success');
   };
 
   // Function to close the dropdown menu when clicking outside
@@ -82,26 +84,39 @@ const DropdownMenu = () => {
 
   return (
     <div className="dropdown-menu" ref={dropdownRef}>
-      <button onClick={toggleMenu}>
+      <button
+        className="account-toggle"
+        type="button"
+        aria-label={t('auth.menu.accountAria')}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        onClick={toggleMenu}
+      >
         {user ? (
           <>
-            <img src={user.photoURL} alt="avatar" className="avatar" />
-            {user.displayName}
+            <img src={user.photoURL} alt={t('auth.avatarAlt')} className="avatar" />
+            <span className="account-label">{user.displayName}</span>
           </>
         ) : (
-          'Connexion'
+          <>
+            <svg className="account-guest-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.5"></circle>
+              <path d="M5.5 20c.6-4 2.8-6 6.5-6s5.9 2 6.5 6"></path>
+            </svg>
+            <span className="account-label">{t('auth.menu.login')}</span>
+          </>
         )}
-        <span style={{ marginLeft: '8px' }}>▼</span>
+        <span className="account-toggle-chevron" aria-hidden="true">▼</span>
       </button>
       <div className={`dropdown-content ${isOpen ? 'show' : ''} ${isPersisting ? 'persist' : ''}`}>
         {user ? (
           <>
             {location.pathname !== '/profile' ? (
-              <button onClick={handleProfileClick}>Profile</button>
+              <button type="button" onClick={handleProfileClick}>{t('auth.menu.profile')}</button>
             ) : (
-              <button onClick={handleHomeClick}>Home</button>
+              <button type="button" onClick={handleHomeClick}>{t('auth.menu.home')}</button>
             )}
-            <button onClick={handleLogout}>Logout</button>
+            <button type="button" onClick={handleLogout}>{t('auth.menu.logout')}</button>
           </>
         ) : (
           <>

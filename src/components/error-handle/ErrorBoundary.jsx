@@ -20,7 +20,7 @@ class ErrorBoundary extends Component {
   // Render a fallback element if an error is cought otherwise render the child component
   render() {
     if (this.state.hasError) {
-      return <h1>Quelque chose s'est mal passé. Veuillez réessayer plus tard.</h1>;
+      return <h1>{this.props.fallbackMessage || "Quelque chose s'est mal passé. Veuillez réessayer plus tard."}</h1>;
     }
 
     return this.props.children; 

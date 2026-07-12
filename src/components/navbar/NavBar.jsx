@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 import DropdownMenu from '../authentication/dropdown/DropdownMenu';
+import LanguageSwitcher from './LanguageSwitcher';
 import categories from '../../pages/home-page/data/static-data.json';
 import './Navbar.css';
 
@@ -10,6 +12,7 @@ const Navbar = () => {
   const categoryMenuRef = useRef(null);
   const categoryPanelRef = useRef(null);
   const location = useLocation();
+  const { getCategoryLabel, t } = useLanguage();
 
   const currentCategory = location.pathname.startsWith('/category/')
     ? decodeURIComponent(location.pathname.split('/category/')[1].split('/')[0])
@@ -64,7 +67,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link className="navbar-brand" to="/" aria-label="Geneva Events Explorer — accueil">
+      <Link className="navbar-brand" to="/" aria-label={t('nav.brandHomeAria')}>
         <img
           className="navbar-brand-flag"
           src="/geneva-flag.svg"
@@ -86,7 +89,7 @@ const Navbar = () => {
           <span className="navigation-grid-icon" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
           </span>
-          <span className="navigation-label">Explorer</span>
+          <span className="navigation-label">{t('nav.explore')}</span>
           <span className="navigation-chevron" aria-hidden="true">▾</span>
         </button>
 
@@ -96,22 +99,19 @@ const Navbar = () => {
               id="category-navigation-menu"
               className="category-navigation-menu"
               ref={categoryPanelRef}
-              aria-label="Catégories d'événements"
+              aria-label={t('nav.categoriesAria')}
             >
-              <div className="category-navigation-heading">Explorer les événements</div>
+              <div className="category-navigation-heading">{t('nav.exploreEvents')}</div>
               <div className="category-navigation-grid">
                 <Link className="category-navigation-link home-link" to="/">
-                  Accueil
+                  {t('nav.home')}
                 </Link>
                 {categories.categories.map((category) => (
                   <Link
                     key={category.apiTag}
                     className={`category-navigation-link ${currentCategory === category.apiTag ? 'active' : ''}`}
                     to={`/category/${encodeURIComponent(category.apiTag)}`}
-                    state={{
-                      displayTag: category.displayTag,
-                      cornerColor: category.cornerColor,
-                    }}
+                    state={{ cornerColor: category.cornerColor }}
                     aria-current={currentCategory === category.apiTag ? 'page' : undefined}
                   >
                     <span
@@ -119,7 +119,7 @@ const Navbar = () => {
                       style={{ background: category.cornerColor }}
                       aria-hidden="true"
                     ></span>
-                    {category.displayTag}
+                    {getCategoryLabel(category.apiTag, category.displayTag)}
                   </Link>
                 ))}
               </div>
@@ -129,7 +129,10 @@ const Navbar = () => {
         )}
       </div>
 
-      <DropdownMenu />
+      <div className="navbar-actions">
+        <LanguageSwitcher />
+        <DropdownMenu />
+      </div>
     </nav>
   );
 };
