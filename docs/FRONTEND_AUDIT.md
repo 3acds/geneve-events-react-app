@@ -42,3 +42,13 @@ Audit date: 2026-07-14
 4. Category behavior is encoded in route paths and must remain intact.
 5. API validation errors should be surfaced; stale fallback remains limited to
    network, rate-limit and server failures.
+
+## Calendar architecture decision
+
+The calendar is implemented with React, semantic HTML and the existing router
+instead of adding a calendar dependency. The feature is read-only, needs only a
+month grid and seven-day agenda, and already has normalized event/date helpers.
+A full calendar package would add significant JavaScript and styling for unused
+editing, drag-and-drop and scheduling features. The native implementation keeps
+keyboard-accessible links and buttons, exposes date/status text independently of
+colour, and switches the month grid to a compact agenda on small screens.

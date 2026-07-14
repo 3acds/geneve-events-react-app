@@ -1,6 +1,6 @@
 // React imports
 import React, { useMemo } from 'react';
-import { useParams, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useLocation, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 // Component imports
 import EventCard from '../../components/event-card/EventCard';
@@ -43,7 +43,22 @@ const CategoryPage = () => {
   return (
     <div className="category-page-container">
       <main className="category-content">
-        <h1 className="category-title">{displayTag}</h1>
+        <div className="category-heading-row">
+          <h1 className="category-title">{displayTag}</h1>
+          <nav className="discovery-switcher" aria-label={t('calendar.discoveryViews')}>
+            <span aria-current="page">{t('calendar.listView')}</span>
+            <Link to={`/calendar/${encodeURIComponent(tag)}?${new URLSearchParams({
+              view: 'month',
+              date: filters.date_from || new Date().toISOString().slice(0, 10),
+              ...(filters.start_time_from && { start_time_from: filters.start_time_from }),
+              ...(filters.start_time_to && { start_time_to: filters.start_time_to }),
+              ...(filters.when && { list_when: filters.when }),
+              ...(filters.date_from && { list_date_from: filters.date_from }),
+              ...(filters.date_to && { list_date_to: filters.date_to }),
+              ...(searchQuery && { list_q: searchQuery }),
+            })}`}>{t('calendar.calendarView')}</Link>
+          </nav>
+        </div>
         <div className="search-bar">
           <input
             type="text"

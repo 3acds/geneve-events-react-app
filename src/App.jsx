@@ -7,6 +7,7 @@ import CategoryPage from './pages/category-page/CategoryPage';
 import EventDetailPage from './pages/event-detail-page/EventDetailPage';
 import ProfilePage from './pages/profile-page/ProfilePage';
 import AboutPage from './pages/about-page/AboutPage';
+import CalendarPage from './pages/calendar-page/CalendarPage';
 import Footer from './components/footer/Footer';
 import ScrollProgressIndicator from './components/navigation/ScrollProgressIndicator';
 import ScrollToTop from './components/navigation/ScrollToTop';
@@ -36,6 +37,7 @@ const AppContent = () => {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/category/:tag" element={<CategoryPage />} />
                   <Route path="/event/:eventId" element={<EventDetailPage />} />
+                  <Route path="/calendar/:tag" element={<CalendarPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/about" element={<AboutPage />} />
                 </Routes> 
