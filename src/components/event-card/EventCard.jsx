@@ -6,6 +6,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { fetchEvents, getCachedEvents } from '../../services/api/api';
 import { formatEventDate, formatEventTime, getEventDateTimeAttribute } from '../../utils/date';
 import { isExplicitlyFree } from '../../models/event';
+import SaveEventButton from '../saved-events/SaveEventButton';
 // CSS imports
 import './EventCard.css'; 
 
@@ -145,14 +146,17 @@ const EventCard = ({ tag, cornerColor, searchQuery, filters = {} }) => {
           </p>
           <div className="event-cards">
             {filteredEvents.slice(0, visibleCount).map((event, index) => (
-              <Link
+              <div
                 key={event.id || `${event.title}-${event.date}-${index}`}
-                className="event-card"
-                to={`/event/${encodeURIComponent(event.id)}`}
-                state={{ event, from: location.pathname }}
-                onClick={rememberListPosition}
+                className="event-card-shell"
                 style={{ '--corner-color': getColorFromGradient(cornerColor) }}
               >
+                <Link
+                  className="event-card"
+                  to={`/event/${encodeURIComponent(event.id)}`}
+                  state={{ event, from: location.pathname }}
+                  onClick={rememberListPosition}
+                >
                 <img
                   className={`event-img ${event.img ? '' : 'is-placeholder'}`.trim()}
                   src={event.img || EVENT_PLACEHOLDER_IMAGE}
@@ -177,7 +181,9 @@ const EventCard = ({ tag, cornerColor, searchQuery, filters = {} }) => {
                   </span>
                   {event.venue && <span className="event-venue">{event.venue}</span>}
                 </div>
-              </Link>
+                </Link>
+                {event.id && <SaveEventButton eventId={event.id} compact />}
+              </div>
             ))}
           </div>
           {visibleCount < filteredEvents.length && (

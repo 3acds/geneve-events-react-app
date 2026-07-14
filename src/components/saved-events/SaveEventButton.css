@@ -1,0 +1,6 @@
+.save-event-button { display:inline-flex; align-items:center; gap:.4rem; min-height:2.6rem; padding:.55rem .8rem; color:var(--gee-paper,#f5f0e4); background:#13293d; border:1px solid rgba(239,181,27,.55); border-radius:3px; cursor:pointer; font-weight:700; }
+.save-event-button.is-saved { color:#07111d; background:var(--gee-gold,#efb51b); }
+.save-event-button:disabled { cursor:wait; opacity:.7; }
+.save-event-button:focus-visible { outline:2px solid var(--gee-gold,#efb51b); outline-offset:3px; }
+.save-event-button.is-compact { position:absolute; z-index:5; top:.5rem; right:.5rem; width:2.4rem; min-height:2.4rem; justify-content:center; padding:0; font-size:1.35rem; background:rgba(7,17,29,.9); }
+.save-event-button.is-compact.is-saved { color:var(--gee-gold,#efb51b); }

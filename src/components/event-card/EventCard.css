@@ -26,12 +26,19 @@
   text-align: center;
 }
 
-.event-card {
+.event-card-shell {
   position: relative;
   width: 100%;
   max-width: 13rem;
   aspect-ratio: 4 / 5;
   justify-self: center;
+}
+
+.event-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   color: var(--corner-color);
   background: linear-gradient(145deg, var(--gee-navy-800, #183047), var(--gee-navy-950, #07111d));
@@ -184,7 +191,7 @@
 }
 
 @media (max-width: 40rem) {
-  .event-card {
+  .event-card-shell {
     max-width: 13rem;
   }
 }
@@ -230,7 +237,7 @@
 }
 
 @media (min-width: 90rem) {
-  .event-card {
+  .event-card-shell {
     max-width: 15rem;
   }
 

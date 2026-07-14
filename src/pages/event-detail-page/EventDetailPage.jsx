@@ -12,6 +12,7 @@ import {
   safeExternalHttpUrl,
 } from '../../utils/location';
 import './EventDetailPage.css';
+import SaveEventButton from '../../components/saved-events/SaveEventButton';
 
 const EVENT_PLACEHOLDER_IMAGE = '/event-placeholder-art.png';
 
@@ -108,6 +109,7 @@ const EventDetailPage = () => {
       <div className="event-detail-info">
         {imageUrl && <img className="event-detail-image" src={imageUrl} alt={event.title} loading="eager" />}
         <h1 className="event-detail-title">{event.title}</h1>
+        {event.id && <SaveEventButton eventId={event.id} />}
         <div className="event-detail-meta">
           <time className="event-detail-date" dateTime={getEventDateTimeAttribute(event)}>
             {formatEventDate(event, locale)}

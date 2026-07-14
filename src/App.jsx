@@ -13,6 +13,8 @@ import ScrollProgressIndicator from './components/navigation/ScrollProgressIndic
 import ScrollToTop from './components/navigation/ScrollToTop';
 // Context imports
 import { AuthProvider } from './context/AuthContext';
+import { SavedEventsProvider } from './context/SavedEventsContext';
+import SavedEventsPage from './pages/saved-events-page/SavedEventsPage';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { NotificationProvider } from './context/NotificationContext';
 // Error handler imports
@@ -25,6 +27,7 @@ const AppContent = () => {
 
   return (
     <AuthProvider>
+      <SavedEventsProvider>
       <NotificationProvider>
         <Router>
           <ScrollToTop />
@@ -39,6 +42,7 @@ const AppContent = () => {
                   <Route path="/event/:eventId" element={<EventDetailPage />} />
                   <Route path="/calendar/:tag" element={<CalendarPage />} />
                   <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/saved" element={<SavedEventsPage />} />
                   <Route path="/about" element={<AboutPage />} />
                 </Routes> 
               </div>
@@ -47,6 +51,7 @@ const AppContent = () => {
           </div>
         </Router>
       </NotificationProvider>
+      </SavedEventsProvider>
 
     </AuthProvider>
   );

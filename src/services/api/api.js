@@ -273,6 +273,50 @@ const fetchRelatedEvents = async (eventId, limit = 4) => requestJson(
   normalizeEvents,
 );
 
+const authenticatedRequest = async (user, path, options = {}) => {
+  if (!user?.getIdToken) {
+    const error = new Error('Authentication required.');
+    error.status = 401;
+    throw error;
+  }
+  const token = await user.getIdToken();
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: { ...options.headers, Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    let detail = '';
+    try { detail = (await response.json())?.error || ''; } catch { /* no JSON body */ }
+    const error = new Error(detail || `Saved-event request failed (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
+  return response.status === 204 ? null : response.json();
+};
+
+const saveEvent = (user, eventId) => authenticatedRequest(
+  user, `/saved-events/${encodeURIComponent(eventId)}`, { method: 'PUT' },
+);
+
+const removeSavedEvent = (user, eventId) => authenticatedRequest(
+  user, `/saved-events/${encodeURIComponent(eventId)}`, { method: 'DELETE' },
+);
+
+const fetchSavedEvents = async (user) => {
+  const records = await authenticatedRequest(user, '/saved-events');
+  return records.map((record) => ({
+    ...record,
+    event: record.event ? normalizeEvent(record.event) : null,
+  }));
+};
+
+const checkSavedEvents = async (user, eventIds) => {
+  const params = new URLSearchParams();
+  eventIds.forEach((eventId) => params.append('event_id', eventId));
+  const response = await authenticatedRequest(user, `/saved-events/status?${params}`);
+  return response.saved || {};
+};
+
 // Fetch events by tag, or derive them from a fresh all-events response.
 const fetchEventsByTag = async (tag) => {
   const allEventsRecord = getCacheRecord(ALL_EVENTS_CACHE_KEY);
@@ -334,4 +378,8 @@ export {
   getCachedEventById,
   getCachedEvents,
   buildEventFilterQuery,
+  saveEvent,
+  removeSavedEvent,
+  fetchSavedEvents,
+  checkSavedEvents,
 };

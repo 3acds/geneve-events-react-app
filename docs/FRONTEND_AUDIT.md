@@ -1,5 +1,19 @@
 # Frontend audit
 
+## Authentication and saved events
+
+The application uses Firebase Authentication with Google popup sign-in; it has
+no local password flow. Before saved events, React stored the user only in
+memory, logout did not call Firebase sign-out, `/profile` was not route-protected,
+and the Flask API verified no identity. Legacy profile fields are written
+directly to Firebase Realtime Database, whose deployed security rules remain an
+external dependency.
+
+Authentication state now follows Firebase's state observer across refreshes.
+Saved-event API calls send fresh Firebase ID tokens, while the backend derives
+the owner solely from the verified UID. `/saved` renders no private data until
+authentication resolves and shows a sign-in requirement for guests.
+
 Audit date: 2026-07-14
 
 ## Architecture

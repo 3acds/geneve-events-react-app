@@ -75,6 +75,12 @@ const DropdownMenu = () => {
     setIsPersisting(false);
   };
 
+  const handleSavedClick = () => {
+    navigate('/saved');
+    setIsOpen(false);
+    setIsPersisting(false);
+  };
+
   // Function to navigate to the home page
   const handleHomeClick = () => {
     navigate('/');
@@ -115,6 +121,9 @@ const DropdownMenu = () => {
               <button type="button" onClick={handleProfileClick}>{t('auth.menu.profile')}</button>
             ) : (
               <button type="button" onClick={handleHomeClick}>{t('auth.menu.home')}</button>
+            )}
+            {location.pathname !== '/saved' && (
+              <button type="button" onClick={handleSavedClick}>{t('auth.menu.saved')}</button>
             )}
             <button type="button" onClick={handleLogout}>{t('auth.menu.logout')}</button>
           </>

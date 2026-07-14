@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import './Notification.css'; 
 
-const NotificationContext = createContext();
+const NotificationContext = createContext({ showNotification: () => {} });
 
 export const useNotification = () => {
   return useContext(NotificationContext);
@@ -28,4 +28,3 @@ export const NotificationProvider = ({ children }) => {
     </NotificationContext.Provider>
   );
 };
-
