@@ -1,5 +1,5 @@
-const API_URL = (import.meta.env.VITE_API_URL || 'https://geneva-events-api.onrender.com')
-  .replace(/\/$/, '');
+import { normalizeEvent, normalizeEvents } from '../../models/event';
+import API_URL from './config';
 
 const CACHE_TTL_MS = 30 * 60 * 1000;
 const CACHE_PREFIX = `gee:api:v1:${API_URL}:`;
@@ -118,9 +118,11 @@ const shouldUseStaleData = (error) => (
   || error.status >= 500
 );
 
-const requestJson = async (path, errorMessage, cacheKey, fallbackRecord = null) => {
+const requestJson = async (
+  path, errorMessage, cacheKey, fallbackRecord = null, transform = (value) => value,
+) => {
   const cachedRecord = getCacheRecord(cacheKey);
-  if (isFresh(cachedRecord)) return cachedRecord.data;
+  if (isFresh(cachedRecord)) return transform(cachedRecord.data);
 
   const pendingRequest = pendingRequests.get(cacheKey);
   if (pendingRequest) return pendingRequest;
@@ -129,17 +131,24 @@ const requestJson = async (path, errorMessage, cacheKey, fallbackRecord = null) 
     try {
       const response = await fetch(`${API_URL}${path}`);
       if (!response.ok) {
-        const error = new Error(`${errorMessage} (${response.status})`);
+        let detail = '';
+        try {
+          const payload = await response.json();
+          detail = typeof payload?.error === 'string' ? payload.error : '';
+        } catch {
+          // Some upstream failures do not return JSON.
+        }
+        const error = new Error(detail || `${errorMessage} (${response.status})`);
         error.status = response.status;
         throw error;
       }
 
-      const data = await response.json();
+      const data = transform(await response.json());
       setCacheRecord(cacheKey, data);
       return data;
     } catch (error) {
       const staleRecord = getCacheRecord(cacheKey) || fallbackRecord;
-      if (staleRecord && shouldUseStaleData(error)) return staleRecord.data;
+      if (staleRecord && shouldUseStaleData(error)) return transform(staleRecord.data);
       throw error;
     } finally {
       pendingRequests.delete(cacheKey);
@@ -158,13 +167,26 @@ const getNewestRecord = (...records) => (
 
 const getTagCacheKey = (tag) => `events:tag:${tag}`;
 
+const FILTER_KEYS = [
+  'when', 'date_from', 'date_to', 'category', 'start_time_from', 'start_time_to',
+];
+
+const buildEventFilterQuery = (filters = {}) => {
+  const params = new URLSearchParams();
+  FILTER_KEYS.forEach((key) => {
+    const value = filters[key];
+    if (typeof value === 'string' && value.trim()) params.set(key, value.trim());
+  });
+  return params.toString();
+};
+
 const getCachedEvents = (tag = 'all') => {
   const directRecord = getCacheRecord(
     tag === 'all' ? ALL_EVENTS_CACHE_KEY : getTagCacheKey(tag),
   );
 
   if (tag === 'all') {
-    return Array.isArray(directRecord?.data) ? directRecord.data : null;
+    return Array.isArray(directRecord?.data) ? normalizeEvents(directRecord.data) : null;
   }
 
   const allEventsRecord = getCacheRecord(ALL_EVENTS_CACHE_KEY);
@@ -179,7 +201,7 @@ const getCachedEvents = (tag = 'all') => {
     derivedRecord,
   );
 
-  return newestRecord ? newestRecord.data : null;
+  return newestRecord ? normalizeEvents(newestRecord.data) : null;
 };
 
 const findCachedEventRecord = (eventId) => {
@@ -213,22 +235,33 @@ const findCachedEventRecord = (eventId) => {
   return getNewestRecord(...candidates);
 };
 
-const getCachedEventById = (eventId) => findCachedEventRecord(eventId)?.data || null;
+const getCachedEventById = (eventId) => {
+  const event = findCachedEventRecord(eventId)?.data;
+  return event ? normalizeEvent(event) : null;
+};
 
 // Fetch all events. The trailing slash avoids an extra redirect on the API.
-const fetchEvents = async () => (
-  requestJson('/events/', 'Unable to fetch events', ALL_EVENTS_CACHE_KEY)
-);
+const fetchEvents = async (filters = {}) => {
+  const query = buildEventFilterQuery(filters);
+  return requestJson(
+    `/events/${query ? `?${query}` : ''}`,
+    'Unable to fetch events',
+    query ? `events:filter:${query}` : ALL_EVENTS_CACHE_KEY,
+    null,
+    normalizeEvents,
+  );
+};
 
 const fetchEventById = async (eventId) => {
   const cachedEvent = findCachedEventRecord(eventId);
-  if (isFresh(cachedEvent)) return cachedEvent.data;
+  if (isFresh(cachedEvent)) return normalizeEvent(cachedEvent.data);
 
   return requestJson(
     `/events/${encodeURIComponent(eventId)}`,
     'Unable to fetch event',
     `event:${String(eventId)}`,
     cachedEvent,
+    normalizeEvent,
   );
 };
 
@@ -236,13 +269,15 @@ const fetchEventById = async (eventId) => {
 const fetchEventsByTag = async (tag) => {
   const allEventsRecord = getCacheRecord(ALL_EVENTS_CACHE_KEY);
   if (isFresh(allEventsRecord) && Array.isArray(allEventsRecord.data)) {
-    return allEventsRecord.data.filter((event) => event.tag === tag);
+    return normalizeEvents(allEventsRecord.data.filter((event) => event.tag === tag));
   }
 
   return requestJson(
     `/events/tag/${encodeURIComponent(tag)}`,
     'Unable to fetch events by tag',
     getTagCacheKey(tag),
+    null,
+    normalizeEvents,
   );
 };
 
@@ -265,11 +300,11 @@ const fetchEventsByDate = async (day, month, year) => {
     && isFresh(allEventsRecord)
     && Array.isArray(allEventsRecord.data)
   ) {
-    return allEventsRecord.data.filter((event) => (
+    return normalizeEvents(allEventsRecord.data.filter((event) => (
       (day == null || Number(event.day) === Number(day))
       && (month == null || Number(event.month) === Number(month))
       && (year == null || Number(event.year) === Number(year))
-    ));
+    )));
   }
 
   const query = params.toString();
@@ -277,6 +312,8 @@ const fetchEventsByDate = async (day, month, year) => {
     `/events/date${query ? `?${query}` : ''}`,
     'Unable to fetch events by date',
     `events:date:${query}`,
+    null,
+    normalizeEvents,
   );
 };
 
@@ -287,4 +324,5 @@ export {
   fetchEventsByDate,
   getCachedEventById,
   getCachedEvents,
+  buildEventFilterQuery,
 };

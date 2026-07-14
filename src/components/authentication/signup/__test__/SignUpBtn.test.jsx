@@ -1,12 +1,20 @@
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import SignUpBtn from '../SignUpBtn';
 import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { signInWithPopup } from 'firebase/auth';
+import { LanguageProvider } from '../../../../context/LanguageContext';
+import { NotificationProvider } from '../../../../context/NotificationContext';
+import SignUpBtn from '../SignUpBtn';
 
-test('displays error message on sign-up failure', async () => {
-  render(<SignUpBtn />);
-  fireEvent.click(screen.getByText(/Register/i));
-  await waitFor(() => {
-    const errorMessages = screen.getAllByText(/Authentication failed. Please try again./i);
-    expect(errorMessages.length).toBeGreaterThan(0);
-  });
+jest.mock('firebase/auth', () => ({ signInWithPopup: jest.fn() }));
+jest.mock('../../../../services/database/firebase', () => ({ auth: {}, googleProvider: {} }));
+
+test('shows a translated notification when Google sign-up fails', async () => {
+  signInWithPopup.mockRejectedValueOnce(new Error('failed'));
+  render(
+    <LanguageProvider initialLanguage="en">
+      <NotificationProvider><SignUpBtn onRegister={jest.fn()} /></NotificationProvider>
+    </LanguageProvider>,
+  );
+  fireEvent.click(screen.getByRole('button', { name: /Sign up with Google/i }));
+  expect(await screen.findByText('Google sign-up failed. Please try again.')).toBeTruthy();
 });

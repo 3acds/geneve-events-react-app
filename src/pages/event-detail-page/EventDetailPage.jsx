@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { fetchEventById, getCachedEventById } from '../../services/api/api';
-import { formatEventDate } from '../../utils/date';
+import { formatEventDate, formatEventTime, getEventDateTimeAttribute } from '../../utils/date';
+import { isExplicitlyFree } from '../../models/event';
 import './EventDetailPage.css';
 
 const EVENT_PLACEHOLDER_IMAGE = '/event-placeholder-art.png';
@@ -78,10 +79,16 @@ const EventDetailPage = () => {
       ></div>
       <div className="event-detail-info">
         <h1 className="event-detail-title">{event.title}</h1>
-        <p className="event-detail-description">{event.description}</p>
-        <time className="event-detail-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>
-          {formatEventDate(event, locale)}
-        </time>
+        {event.description && <p className="event-detail-description">{event.description}</p>}
+        <div className="event-detail-meta">
+          <time className="event-detail-date" dateTime={getEventDateTimeAttribute(event)}>
+            {formatEventDate(event, locale)}
+          </time>
+          <span>{event.has_start_time ? formatEventTime(event, locale) : t('events.timeUnknown')}</span>
+          {event.tag && <span>{event.tag}</span>}
+          {isExplicitlyFree(event) && <span>{t('events.free')}</span>}
+          {event.venue && <span>{event.venue}</span>}
+        </div>
       </div>
     </div>
   );

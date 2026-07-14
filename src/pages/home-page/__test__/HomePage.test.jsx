@@ -1,24 +1,15 @@
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import HomePage from '../HomePage';
-import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
-import { NotificationProvider } from '../../../context/NotificationContext';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { LanguageProvider } from '../../../context/LanguageContext';
+import HomePage from '../HomePage';
 
-test('displays error message when failing to fetch all events', async () => {
+test('links the all-events category to its shareable route', () => {
   render(
-    <MemoryRouter>
-      <NotificationProvider>
-        <HomePage />
-      </NotificationProvider>
-    </MemoryRouter>
+    <LanguageProvider initialLanguage="en">
+      <MemoryRouter><HomePage /></MemoryRouter>
+    </LanguageProvider>,
   );
-
-  fireEvent.click(screen.getByText(/All Events/i));
-
-  await waitFor(() => {
-    const errorMessages = screen.getAllByText((content, element) => {
-      return element.textContent.match(/Failed to load events. Please try again later./i);
-    });
-    expect(errorMessages.length).toBeGreaterThan(0);
-  });
+  expect(screen.getByRole('link', { name: /All events/i }).getAttribute('href'))
+    .toBe('/category/all');
 });

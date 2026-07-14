@@ -86,16 +86,44 @@
   transition: width 0.28s ease, height 0.28s ease, opacity 0.2s ease;
 }
 
-.event-date {
+.event-card-meta {
   position: absolute;
   z-index: 2;
   right: 0.75rem;
   bottom: 0.65rem;
   left: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.45rem;
   color: #fff;
   font-size: clamp(0.7rem, 1.8vw, 0.82rem);
   font-weight: 650;
   text-shadow: 0 1px 4px #000;
+}
+
+.event-card-meta .event-date,
+.event-card-meta .event-venue {
+  flex-basis: 100%;
+}
+
+.event-category,
+.event-price {
+  padding: 0.12rem 0.3rem;
+  background: rgba(7, 17, 29, 0.82);
+  border-radius: 2px;
+  font-size: 0.67rem;
+}
+
+.event-price {
+  color: var(--gee-navy-950, #07111d);
+  background: var(--gee-gold, #efb51b);
+  text-shadow: none;
+}
+
+.event-time,
+.event-venue {
+  color: #e5e9ed;
+  font-size: 0.7rem;
 }
 
 .event-card:focus-visible {

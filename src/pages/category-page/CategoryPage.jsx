@@ -1,6 +1,6 @@
 // React imports
-import React, { useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { useParams, useLocation, useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 // Component imports
 import EventCard from '../../components/event-card/EventCard';
@@ -17,7 +17,28 @@ const CategoryPage = () => {
   const cornerColor = location.state?.cornerColor
     || category?.cornerColor
     || 'linear-gradient(to right, #FFEC00, #FF0000)';
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+  const filters = useMemo(() => ({
+    category: tag === 'all' ? '' : tag,
+    when: searchParams.get('when') || '',
+    date_from: searchParams.get('date_from') || '',
+    date_to: searchParams.get('date_to') || '',
+    start_time_from: searchParams.get('start_time_from') || '',
+    start_time_to: searchParams.get('start_time_to') || '',
+  }), [searchParams, tag]);
+
+  const updateFilter = (name, value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(name, value);
+    else next.delete(name);
+    if (name === 'when' && value) {
+      next.delete('date_from');
+      next.delete('date_to');
+    }
+    if ((name === 'date_from' || name === 'date_to') && value) next.delete('when');
+    setSearchParams(next, { replace: true });
+  };
 
   return (
     <div className="category-page-container">
@@ -29,14 +50,46 @@ const CategoryPage = () => {
             placeholder={t('events.searchPlaceholder')}
             aria-label={t('events.searchPlaceholder')}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => updateFilter('q', e.target.value)}
           />
         </div>
+        <form className="event-filters" onSubmit={(event) => event.preventDefault()}>
+          <label>
+            <span>{t('filters.when')}</span>
+            <select value={filters.when} onChange={(event) => updateFilter('when', event.target.value)}>
+              <option value="">{t('filters.anyDate')}</option>
+              <option value="today">{t('filters.today')}</option>
+              <option value="tomorrow">{t('filters.tomorrow')}</option>
+              <option value="this_week">{t('filters.thisWeek')}</option>
+              <option value="this_weekend">{t('filters.thisWeekend')}</option>
+            </select>
+          </label>
+          <label>
+            <span>{t('filters.dateFrom')}</span>
+            <input type="date" value={filters.date_from} onChange={(event) => updateFilter('date_from', event.target.value)} />
+          </label>
+          <label>
+            <span>{t('filters.dateTo')}</span>
+            <input type="date" value={filters.date_to} onChange={(event) => updateFilter('date_to', event.target.value)} />
+          </label>
+          <label>
+            <span>{t('filters.timeFrom')}</span>
+            <input type="time" value={filters.start_time_from} onChange={(event) => updateFilter('start_time_from', event.target.value)} />
+          </label>
+          <label>
+            <span>{t('filters.timeTo')}</span>
+            <input type="time" value={filters.start_time_to} onChange={(event) => updateFilter('start_time_to', event.target.value)} />
+          </label>
+          <button type="button" onClick={() => setSearchParams({}, { replace: true })}>
+            {t('filters.reset')}
+          </button>
+        </form>
         <EventCard
           key={tag}
           tag={tag}
           cornerColor={cornerColor}
           searchQuery={searchQuery}
+          filters={filters}
         />
       </main>
     </div>

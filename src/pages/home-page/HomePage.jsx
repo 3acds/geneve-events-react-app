@@ -27,7 +27,6 @@ const HomePage = () => {
               src={event.img}
               alt=""
               loading={index < 4 ? 'eager' : 'lazy'}
-              fetchPriority={index < 2 ? 'high' : 'auto'}
             />
             <div className="corner-tag" style={{ background: event.cornerColor }}></div>
             <h2>{getCategoryLabel(event.apiTag, event.displayTag)}</h2>

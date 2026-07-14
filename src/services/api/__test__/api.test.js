@@ -1,77 +1,33 @@
-import { fetchEvents, fetchEventsByTag, fetchEventsByDate } from '../api';
+jest.mock('../config', () => ({ __esModule: true, default: 'https://api.example.test' }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve([]),
-    ok: true,
-  })
-);
+import { buildEventFilterQuery, fetchEvents } from '../api';
 
-describe('API functions', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+global.fetch = jest.fn();
+
+describe('filtered event API', () => {
+  beforeEach(() => {
+    fetch.mockReset();
+    window.localStorage.clear();
   });
 
-  it('fetches all events successfully', async () => {
-    const mockData = [{ id: 1, name: 'Event 1' }];
+  it('builds only supported backend filter parameters', () => {
+    expect(buildEventFilterQuery({
+      when: 'this_weekend', category: 'Concert', q: 'ignored', start_time_from: '18:00',
+    })).toBe('when=this_weekend&category=Concert&start_time_from=18%3A00');
+  });
+
+  it('requests a shareable filtered URL and normalizes missing fields', async () => {
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => [{ id: 1, title: 'Event' }] });
+    const data = await fetchEvents({ date_from: '2026-07-14', category: 'Concert' });
+    expect(fetch.mock.calls[0][0]).toMatch(/\/events\/\?date_from=2026-07-14&category=Concert$/);
+    expect(data[0]).toMatchObject({ id: '1', has_start_time: false, price_type: 'unknown' });
+  });
+
+  it('surfaces backend validation errors', async () => {
     fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve(mockData),
-      ok: true,
+      ok: false, status: 400, json: async () => ({ error: 'date_from must use YYYY-MM-DD format.' }),
     });
-
-    const data = await fetchEvents();
-    expect(data).toEqual(mockData);
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://192.168.1.15:8080/events');
-  });
-
-  it('fetches events by tag successfully', async () => {
-    const mockData = [{ id: 1, name: 'Event 1' }];
-    fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve(mockData),
-      ok: true,
-    });
-
-    const data = await fetchEventsByTag('Dance');
-    expect(data).toEqual(mockData);
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://192.168.1.15:8080/events/tag/Dance');
-  });
-
-  it('fetches events by date successfully', async () => {
-    const mockData = [{ id: 1, name: 'Event 1' }];
-    fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve(mockData),
-      ok: true,
-    });
-
-    const data = await fetchEventsByDate(12, 4, 2024);
-    expect(data).toEqual(mockData);
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://192.168.1.15:8080/events/date?day=12&month=4&year=2024');
-  });
-
-  it('handles fetch error for all events', async () => {
-    fetch.mockRejectedValueOnce(new Error('Network response was not ok'));
-
-    await expect(fetchEvents()).rejects.toThrow('Network response was not ok');
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://192.168.1.15:8080/events');
-  });
-
-  it('handles fetch error for events by tag', async () => {
-    fetch.mockRejectedValueOnce(new Error('Network response was not ok'));
-
-    await expect(fetchEventsByTag('Dance')).rejects.toThrow('Network response was not ok');
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://192.168.1.15:8080/events/tag/Dance');
-  });
-
-  it('handles fetch error for events by date', async () => {
-    fetch.mockRejectedValueOnce(new Error('Network response was not ok'));
-
-    await expect(fetchEventsByDate(12, 4, 2024)).rejects.toThrow('Network response was not ok');
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('http://192.168.1.15:8080/events/date?day=12&month=4&year=2024');
+    await expect(fetchEvents({ date_from: 'invalid-test-value' }))
+      .rejects.toThrow('date_from must use YYYY-MM-DD format.');
   });
 });

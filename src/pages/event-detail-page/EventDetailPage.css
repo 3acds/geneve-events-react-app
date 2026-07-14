@@ -173,6 +173,20 @@
   letter-spacing: 0.035em;
 }
 
+.event-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  align-items: center;
+  color: #d4dce4;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.event-detail-meta .event-detail-date {
+  flex-basis: 100%;
+}
+
 .event-detail-error {
   min-height: 60vh;
   padding: 8rem 1rem 3rem;

@@ -1,3 +1,5 @@
+import React from 'react';
+
 const GoogleIcon = () => (
   <svg className="google-icon" viewBox="0 0 24 24" aria-hidden="true">
     <path fill="#4285f4" d="M21.6 12.2c0-.7-.1-1.5-.2-2.2H12v4.3h5.4a4.7 4.7 0 0 1-2 3v2.8h3.5c2-1.9 3.2-4.6 3.2-7.9Z"/>

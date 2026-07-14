@@ -3,8 +3,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 // Component imports
-import { fetchEventsByTag, fetchEvents, getCachedEvents } from '../../services/api/api';
-import { formatEventDate } from '../../utils/date';
+import { fetchEvents, getCachedEvents } from '../../services/api/api';
+import { formatEventDate, formatEventTime, getEventDateTimeAttribute } from '../../utils/date';
+import { isExplicitlyFree } from '../../models/event';
 // CSS imports
 import './EventCard.css'; 
 
@@ -19,21 +20,22 @@ const readListState = (key) => {
   }
 };
 
-const EventCard = ({ tag, cornerColor, searchQuery }) => {
+const EventCard = ({ tag, cornerColor, searchQuery, filters = {} }) => {
   const location = useLocation();
   const { locale, t } = useLanguage();
   const listStateKey = `gee:event-list:${location.pathname}`;
   const restoredScroll = useRef(false);
-  const [events, setEvents] = useState(() => getCachedEvents(tag) || []);
-  const [loading, setLoading] = useState(() => getCachedEvents(tag) === null);
-  const [error, setError] = useState(false);
+  const hasStructuredFilters = Object.entries(filters).some(([key, value]) => key !== 'category' && value);
+  const [events, setEvents] = useState(() => hasStructuredFilters ? [] : (getCachedEvents(tag) || []));
+  const [loading, setLoading] = useState(() => hasStructuredFilters || getCachedEvents(tag) === null);
+  const [error, setError] = useState('');
   const [visibleCount, setVisibleCount] = useState(
     () => Math.max(EVENTS_PER_BATCH, readListState(listStateKey).visibleCount || 0),
   );
 
   useEffect(() => {
     let active = true;
-    const cachedEvents = getCachedEvents(tag);
+    const cachedEvents = hasStructuredFilters ? null : getCachedEvents(tag);
 
     if (cachedEvents !== null) {
       setEvents(cachedEvents);
@@ -42,12 +44,12 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
       setEvents([]);
       setLoading(true);
     }
-    setError(false);
+    setError('');
 
     const loadEvents = async () => {
       for (let attempt = 0; attempt < 3; attempt += 1) {
         try {
-          const data = tag === 'all' ? await fetchEvents() : await fetchEventsByTag(tag);
+          const data = await fetchEvents(filters);
           if (!active) return;
           setEvents(Array.isArray(data) ? data : []);
           setLoading(false);
@@ -55,7 +57,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
         } catch (loadError) {
           if (!active) return;
           if (attempt === 2) {
-            setError(true);
+            setError(loadError?.message || t('events.loadError'));
             setLoading(false);
           } else {
             await new Promise((resolve) => setTimeout(resolve, 300 * (attempt + 1)));
@@ -66,7 +68,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
 
     loadEvents();
     return () => { active = false; };
-  }, [tag]);
+  }, [filters, hasStructuredFilters, tag, t]);
 
   const filteredEvents = useMemo(() => (
     events.filter(event =>
@@ -127,7 +129,7 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
   if (error) {
     return (
       <div className="error-message">
-        {t('events.loadError')}
+        {error}
       </div>
     );
   }
@@ -156,7 +158,6 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
                   src={event.img || EVENT_PLACEHOLDER_IMAGE}
                   alt=""
                   loading={index < 6 ? 'eager' : 'lazy'}
-                  fetchPriority={index < 3 ? 'high' : 'auto'}
                   onError={(imageEvent) => {
                     imageEvent.currentTarget.onerror = null;
                     imageEvent.currentTarget.classList.add('is-placeholder');
@@ -165,9 +166,17 @@ const EventCard = ({ tag, cornerColor, searchQuery }) => {
                 />
                 <div className="corner-tag" style={{ background: cornerColor }}></div>
                 <h2>{event.title}</h2>
-                <time className="event-date" dateTime={typeof event.date === 'string' ? event.date : undefined}>
-                  {formatEventDate(event, locale)}
-                </time>
+                <div className="event-card-meta">
+                  {event.tag && <span className="event-category">{event.tag}</span>}
+                  {isExplicitlyFree(event) && <span className="event-price">{t('events.free')}</span>}
+                  <time className="event-date" dateTime={getEventDateTimeAttribute(event)}>
+                    {formatEventDate(event, locale)}
+                  </time>
+                  <span className="event-time">
+                    {event.has_start_time ? formatEventTime(event, locale) : t('events.timeUnknown')}
+                  </span>
+                  {event.venue && <span className="event-venue">{event.venue}</span>}
+                </div>
               </Link>
             ))}
           </div>

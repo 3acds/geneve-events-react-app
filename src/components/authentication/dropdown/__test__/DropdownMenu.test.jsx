@@ -1,25 +1,20 @@
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import DropdownMenu from '../DropdownMenu';
-import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { AuthProvider } from '../../../../context/AuthContext';
+import { LanguageProvider } from '../../../../context/LanguageContext';
+import { NotificationProvider } from '../../../../context/NotificationContext';
+import DropdownMenu from '../DropdownMenu';
 
-test('displays error message on Google sign-in failure', async () => {
+test('opens accessible sign-in and sign-up actions for a guest', () => {
   render(
-    <MemoryRouter>
-      <AuthProvider>
-        <DropdownMenu />
-      </AuthProvider>
-    </MemoryRouter>
+    <LanguageProvider initialLanguage="en">
+      <MemoryRouter>
+        <AuthProvider><NotificationProvider><DropdownMenu /></NotificationProvider></AuthProvider>
+      </MemoryRouter>
+    </LanguageProvider>,
   );
-
-  fireEvent.click(screen.getByText(/Login/i));
-
-  await waitFor(() => {
-    const errorMessages = screen.getAllByText((content, element) => {
-      return element.textContent.match(/Google sign-in error. Please try again./i);
-    });
-    expect(errorMessages.length).toBeGreaterThan(0);
-  });
+  fireEvent.click(screen.getByRole('button', { name: 'Open account menu' }));
+  expect(screen.getByRole('button', { name: /Sign in with Google/i })).toBeTruthy();
+  expect(screen.getByRole('button', { name: /Sign up with Google/i })).toBeTruthy();
 });
-
