@@ -1,6 +1,6 @@
 jest.mock('../config', () => ({ __esModule: true, default: 'https://api.example.test' }));
 
-import { buildEventFilterQuery, fetchEvents } from '../api';
+import { buildEventFilterQuery, fetchEvents, fetchRelatedEvents } from '../api';
 
 global.fetch = jest.fn();
 
@@ -29,5 +29,11 @@ describe('filtered event API', () => {
     });
     await expect(fetchEvents({ date_from: 'invalid-test-value' }))
       .rejects.toThrow('date_from must use YYYY-MM-DD format.');
+  });
+
+  it('requests a bounded related-event collection', async () => {
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => [] });
+    await fetchRelatedEvents('event/id', 4);
+    expect(fetch).toHaveBeenCalledWith('https://api.example.test/events/event%2Fid/related?limit=4');
   });
 });

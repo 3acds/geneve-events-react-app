@@ -265,6 +265,14 @@ const fetchEventById = async (eventId) => {
   );
 };
 
+const fetchRelatedEvents = async (eventId, limit = 4) => requestJson(
+  `/events/${encodeURIComponent(eventId)}/related?limit=${encodeURIComponent(limit)}`,
+  'Unable to fetch related events',
+  `events:related:${String(eventId)}:${limit}`,
+  null,
+  normalizeEvents,
+);
+
 // Fetch events by tag, or derive them from a fresh all-events response.
 const fetchEventsByTag = async (tag) => {
   const allEventsRecord = getCacheRecord(ALL_EVENTS_CACHE_KEY);
@@ -322,6 +330,7 @@ export {
   fetchEvents,
   fetchEventsByTag,
   fetchEventsByDate,
+  fetchRelatedEvents,
   getCachedEventById,
   getCachedEvents,
   buildEventFilterQuery,

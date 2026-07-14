@@ -52,3 +52,12 @@ A full calendar package would add significant JavaScript and styling for unused
 editing, drag-and-drop and scheduling features. The native implementation keeps
 keyboard-accessible links and buttons, exposes date/status text independently of
 colour, and switches the month grid to a compact agenda on small screens.
+
+## Location integration decision
+
+The listing feed contains no location data. The backend extracts only schema.org
+`Event.location` values from detail pages and marks incomplete records
+`partial`. The frontend displays partial venue/address text, but creates an
+OpenStreetMap search only from a street address plus city or a venue plus city.
+Embedded maps require valid coordinates and a `confirmed` or `geocoded` status.
+No default coordinate, browser geocoder, or user-controlled map URL is used.
